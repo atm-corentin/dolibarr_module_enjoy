@@ -1,9 +1,8 @@
-# [DOLIBARR MODULE](https://www.dolibarr.org) CHIFFRAGE
-Last published version :
+# [DOLIBARR MODULE](https://www.dolibarr.org) CLIENJOYHOLIDAYS
 
-![Last realease](https://img.shields.io/github/v/release/ATM-Consulting/dolibarr_module_chiffrage)
 
-Chiffrage is a Dolibarr module usefull to create a costing rule and be able to use it later as reference
+
+CliEnjoyHolidays is a Dolibarr module usefull to manage travel
 
 ## LICENSE
 Copyright (C) 2019 ATM Consulting <contact@atm-consulting.fr>
@@ -49,7 +48,7 @@ Note: If this screen tells you there is no custom directory, check your setup is
 
 ### From a GIT repository
 
-- Clone the repository in ```$dolibarr_main_document_root_alt/chiffrage```
+- Clone the repository in ```$dolibarr_main_document_root_alt/clienjoyholidays```
 
 ```sh
 cd ....../custom

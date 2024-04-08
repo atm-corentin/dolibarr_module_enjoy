@@ -17,30 +17,26 @@
 # Generic
 #
 
-# Module label 'ModuleChiffrageName'
-ModuleChiffrageName = Chiffrage
-# Module description 'ModuleChiffrageDesc'
-ModuleChiffrageDesc = Chiffrage description
+# Module label 'ModuleCliEnjoyHolidaysName'
+ModuleCliEnjoyHolidaysName = CliEnjoyHolidays
+# Module description 'ModuleCliEnjoyHolidaysDesc'
+ModuleCliEnjoyHolidaysDesc = CliEnjoyHolidays description
 
 #
 # Admin page
 #
-ChiffrageSetup = Chiffrage setup
+CliEnjoyHolidaysSetup = CliEnjoyHolidays setup
 Settings = Settings
-ChiffrageSetupPage = Chiffrage setup page
-CHIFFRAGE_MYPARAM1 = My param 1
-CHIFFRAGE_MYPARAM1Tooltip = My param 1 tooltip
-CHIFFRAGE_MYPARAM2=My param 2
-CHIFFRAGE_MYPARAM2Tooltip=My param 2 tooltip
-CHIFFRAGE_DEFAULT_PRODUCT = Default product
+CliEnjoyHolidaysSetupPage = CliEnjoyHolidays setup page
+CLIENJOYHOLIDAYS_DEFAULT_PRODUCT = Default product
 
 
 #
 # About page
 #
 About = About
-ChiffrageAbout = About Chiffrage
-ChiffrageAboutPage = Chiffrage about page
+CliEnjoyHolidaysAbout = About CliEnjoyHolidays
+CliEnjoyHolidaysAboutPage = CliEnjoyHolidays about page
 
 #
 # Sample page

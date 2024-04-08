@@ -77,14 +77,6 @@ $type = 'myobject';
 $arrayofparameters = array(
 	'CHIFFRAGE_DEFAULT_PRODUCT'=>array('type'=>'product', 'enabled'=>1),
 	'CHIFFRAGE_DEFAULT_MULTIPLICATOR_FOR_TASK'=>array('type'=>'task', 'enabled'=>1),
-	//'CHIFFRAGE_MYPARAM1'=>array('type'=>'string', 'css'=>'minwidth500' ,'enabled'=>1),
-	//'CHIFFRAGE_MYPARAM2'=>array('type'=>'textarea','enabled'=>1),
-	//'CHIFFRAGE_MYPARAM3'=>array('type'=>'category:'.Categorie::TYPE_CUSTOMER, 'enabled'=>1),
-	//'CHIFFRAGE_MYPARAM4'=>array('type'=>'emailtemplate:thirdparty', 'enabled'=>1),
-	//'CHIFFRAGE_MYPARAM5'=>array('type'=>'yesno', 'enabled'=>1),
-	//'CHIFFRAGE_MYPARAM5'=>array('type'=>'thirdparty_type', 'enabled'=>1),
-	//'CHIFFRAGE_MYPARAM6'=>array('type'=>'securekey', 'enabled'=>1),
-	//'CHIFFRAGE_MYPARAM7'=>array('type'=>'product', 'enabled'=>1),
 );
 
 $error = 0;
