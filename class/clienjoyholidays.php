@@ -28,7 +28,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/commonobject.class.php';
 //require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
 
 /**
- * Class for Chiffrage
+ * Class for CliEnjoyHolidays
  */
 class CliEnjoyHolidays extends CommonObject
 {
@@ -67,11 +67,7 @@ class CliEnjoyHolidays extends CommonObject
 	const STATUS_DRAFT = 0;
 	const STATUS_VALIDATED = 1;
 	const STATUS_CANCELED = 9;
-	const STATUS_ESTIMATED = 10;
-	const STATUS_PROPOSED = 11;
-	const STATUS_SOLD = 12;
-	const STATUS_CONVERTED = 13;
-	const STATUS_REALIZED = 14;
+
 
 
 	/**
@@ -106,58 +102,37 @@ class CliEnjoyHolidays extends CommonObject
 	 */
 	public $fields=array(
 		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'css'=>'left', 'comment'=>"Id"),
-		'ref' => array('type'=>'varchar(40)', 'label'=>'Ref', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
-        'entity' => array('type'=>'integer', 'label'=>'Entity', 'enabled'=>1, 'visible'=>0, 'notnull'=> 1, 'default'=>1, 'index'=>1, 'position'=>20),
-		'group_title' => array('type'=>'varchar(160)', 'label'=>'GroupTitle', 'enabled'=>'1', 'position'=>52, 'notnull'=>0, 'visible'=>0, 'searchall'=>1, 'css'=>'minwidth300', 'cssview'=>'wordbreak', 'showoncombobox'=>'0', 'help'=>"CHIHelpGroupTitle"),
-		'amount' => array('type'=>'price', 'label'=>'Amount', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>0, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help text for amount",),
-		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php:1:(status:=:1)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>40, 'notnull'=>-1, 'visible'=>1, 'index'=>1,'css'=>'minwidth200 maxwidth500 widthcentpercentminusx',),
-		'qty' => array('type'=>'real', 'label'=>'CHIDayQty', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>5, 'default'=>0, 'isameasure'=>'1', 'css'=>'maxwidth75imp', 'help'=>"CHIHelpQty"),
-		'fk_project' => array('type'=>'integer:Project:projet/class/project.class.php:1', 'label'=>'Project', 'enabled'=>'1', 'position'=>50, 'notnull'=>-1, 'visible'=>-1, 'index'=>1,'css'=>'minwidth200 maxwidth500 widthcentpercentminusx',),
-		'fk_product' => array('type'=>'integer:Product:product/class/product.class.php:1', 'label'=>'CHIProductService', 'enabled'=>'1', 'position'=>51, 'notnull'=>-1, 'visible'=>-1, 'index'=>1,'css'=>'minwidth200 maxwidth500 widthcentpercentminusx',),
-		'description' => array('type'=>'text', 'label'=>'Description', 'enabled'=>'1', 'position'=>60, 'notnull'=>0, 'visible'=>0,),
-		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>0,),
-		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>62, 'notnull'=>0, 'visible'=>0,),
-		'date_creation' => array('type'=>'date', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
-		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
-		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'LastMainDoc', 'enabled'=>'1', 'position'=>600, 'notnull'=>0, 'visible'=>0,),
-		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>-2,),
-		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
+		'ref' => array('type'=>'varchar(40)', 'label'=>'CEHRef', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'default'=>'(CEH)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
+		'libelle' => array('type'=>'text', 'label'=>'CEHLibelle', 'enabled'=>'1', 'position'=>60, 'notnull'=>1, 'visible'=>0,'default'=>'(LIBELLE)'),
+		'destination_country' => array('type'=>'varchar(40)', 'label'=>'CEHDestinationCountry', 'enabled'=>'1', 'position'=>600, 'notnull'=>1, 'visible'=>0, 'default'=>'(COUNTRY)'),
+		'amount' => array('type'=>'price', 'label'=>'CEHamount', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>0, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help text for amount",),
+		'start_date' => array('type'=>'date', 'label'=>'CEHStartDate', 'enabled'=>'1', 'position'=>500, 'notnull'=>0, 'visible'=>-2,),
+		'returndate' => array('type'=>'date', 'label'=>'CEHReturnDate', 'enabled'=>'1', 'position'=>500, 'notnull'=>0, 'visible'=>-2,),
+		'start_time' => array('type'=>'datetime', 'label'=>'CEHStartTime', 'enabled'=>'1', 'position'=>500, 'notnull'=>0, 'visible'=>-2,),
+		'return_time' => array('type'=>'datetime', 'label'=>'CEHReturnTime', 'enabled'=>'1', 'position'=>500, 'notnull'=>0, 'visible'=>-2,),
 		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'notnull'=>1, 'position'=>1000, 'visible'=>5, 'default'=>0,'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;','10'=>'CHIEstimated','13'=>'CHIConverted','14'=>'CHIRealized'),),
-		'commercial_text' => array('type'=>'html', 'label'=>'CHICommercialText', 'enabled'=>'1', 'position'=>53, 'notnull'=>1, 'visible'=>-1,'csslist'=>'fieldkeytoswitchonsecondcolumn'),
-		'detailed_feature_specification' => array('type'=>'html', 'label'=>'DetailedFeatureSpecification', 'enabled'=>'1', 'position'=>55, 'notnull'=>-1, 'visible'=>-1,'csslist'=>'fieldkeytoswitchonsecondcolumn'),
-		'tech_detail' => array('type'=>'html', 'label'=>'CHITechDetail', 'enabled'=>'1', 'position'=>65, 'notnull'=>-1, 'visible'=>-1),
-		'dev_estimate' => array('type'=>'integer:User:user/class/user.class.php:1:((employee:=:1) AND (t.statut:=:1))', 'label'=>'CHIDevEstimate','css'=>'minwidth200 maxwidth300 widthcentpercentminusx', 'enabled'=>'1', 'position'=>60, 'notnull'=>0, 'visible'=>5,),
-		'po_estimate' => array('type'=>'integer:User:user/class/user.class.php:1:((employee:=:1) AND (t.statut:=:1))', 'label'=>'CHIPOEstimate', 'enabled'=>'1','css'=>'minwidth200 maxwidth300 widthcentpercentminusx', 'position'=>30, 'notnull'=>1, 'visible'=>1,),
-		'module_name' => array('type'=>'integer:WebModule:webhost/class/webmodule.class.php', 'label'=>'CHIModuleName', 'enabled'=>'1', 'position'=>58, 'notnull'=>0, 'visible'=>1, 'searchall'=>1,'css'=>'minwidth200 maxwidth500 widthcentpercentminusx',),
-		'keywords' => array('type'=>'varchar(128)', 'label'=>'CHIKeywords', 'enabled'=>'1', 'position'=>56, 'notnull'=>0, 'visible'=>1,'showoncombobox'=>'0','css'=>'minwidth200 maxwidth500 widthcentpercentminusx',),
-		'estimate_date' => array('type'=>'date', 'label'=>'CHIEstimateDate', 'enabled'=>'1', 'position'=>72, 'notnull'=>0, 'visible'=>5, 'help'=>"CHIHelpEstimateDate",),
+		'travel_mod' => array('type'=>'varchar(14)', 'label'=>'CEHtravelMod', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>-2,),
+		'module_name' => array('type'=>'integer:WebModule:webhost/class/webmodule.class.php', 'label'=>'CEHModuleName', 'enabled'=>'1', 'position'=>58, 'notnull'=>0, 'visible'=>1, 'searchall'=>1,'css'=>'minwidth200 maxwidth500 widthcentpercentminusx',),
+		'keywords' => array('type'=>'varchar(128)', 'label'=>'CEHKeywords', 'enabled'=>'1', 'position'=>56, 'notnull'=>0, 'visible'=>1,'showoncombobox'=>'0','css'=>'minwidth200 maxwidth500 widthcentpercentminusx',),
+		'entity' => array('type'=>'integer', 'label'=>'Entity', 'enabled'=>1, 'visible'=>0, 'notnull'=> 1, 'default'=>1, 'index'=>1, 'position'=>20),
 	);
 
 	public $rowid;
 	public $ref;
+	public $libelle;
+	public $destination_country;
 	public $amount;
-	public $qty;
-	public $fk_soc;
-	public $fk_project;
-	public $fk_product;
-	public $description;
-	public $note_public;
-	public $note_private;
-	public $date_creation;
-	public $tms;
-	public $last_main_doc;
-	public $import_key;
-	public $model_pdf;
 	public $status;
-	public $commercial_text;
-	public $detailed_feature_specification;
-	public $tech_detail;
-	public $dev_estimate;
-	public $po_estimate;
+	public $start_date;
+	public $return_date;
+	public $start_time;
+	public $return_time;
+	public $travel_mod;
 	public $module_name;
 	public $keywords;
-	public $estimate_date;
-    public $entity;
+	public $entity;
+
+
 	// END MODULEBUILDER PROPERTIES
 
 
@@ -309,26 +284,29 @@ class CliEnjoyHolidays extends CommonObject
 		if (property_exists($object, 'ref')) {
 			$object->ref = empty($this->fields['ref']['default']) ? "Copy_Of_".$object->ref : $this->fields['ref']['default'];
 		}
-		if (property_exists($object, 'status')) {
-			$object->status = self::STATUS_DRAFT;
+		if (property_exists($object, 'libelle')) {
+			$object->ref = empty($this->fields['libelle']['default']) ? "Copy_Of_".$object->libelle : $this->fields['libelle']['default'];
 		}
-		if (property_exists($object, 'date_creation')) {
-			$object->date_creation = dol_now();
+		if (property_exists($object, 'destination_country')) {
+			$object->ref = empty($this->fields['destination_country']['default']) ? "Copy_Of_".$object->destination_country : $this->fields['destination_country']['default'];
 		}
-		if (property_exists($object, 'date_modification')) {
-			$object->date_modification = null;
+		if (property_exists($object, 'start_date')) {
+			$object->start_date = null;
 		}
-        if (property_exists($object, 'tech_detail')) {
-            $object->tech_detail = null;
+		if (property_exists($object, 'return_date')) {
+			$object->return_date_date = null;
+		}
+		if (property_exists($object, 'start_time')) {
+			$object->start_time = null;
+		}
+        if (property_exists($object, 'return_time')) {
+            $object->return_time = null;
         }
-        if (property_exists($object, 'estimate_date')) {
-            $object->estimate_date = null;
+        if (property_exists($object, 'amount')) {
+            $object->amount = null;
         }
-        if (property_exists($object, 'qty')) {
-            $object->qty = null;
-        }
-        if (property_exists($object, 'dev_estimate')) {
-            $object->dev_estimate = null;
+        if (property_exists($object, 'travel_mod')) {
+            $object->travel_mod = null;
         }
         if (property_exists($object, 'module_name')) {
             $object->module_name = null;
@@ -336,6 +314,9 @@ class CliEnjoyHolidays extends CommonObject
         if (property_exists($object, 'keywords')) {
             $object->keywords = null;
         }
+		if (property_exists($object, 'status')) {
+			$object->status = self::STATUS_DRAFT;
+		}
 		// ...
 		// Clear extrafields that are unique
 		if (is_array($object->array_options) && count($object->array_options) > 0) {
