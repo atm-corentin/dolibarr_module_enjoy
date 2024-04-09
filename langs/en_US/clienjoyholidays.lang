@@ -14,35 +14,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# Generic
-#
-
-# Module label 'ModuleChiffrageName'
-ModuleChiffrageName = Chiffrage
-# Module description 'ModuleChiffrageDesc'
-ModuleChiffrageDesc = Chiffrage description
-
-#
-# Admin page
-#
-ChiffrageSetup = Chiffrage setup
-Settings = Settings
-ChiffrageSetupPage = Chiffrage setup page
-CHIFFRAGE_MYPARAM1 = My param 1
-CHIFFRAGE_MYPARAM1Tooltip = My param 1 tooltip
-CHIFFRAGE_MYPARAM2=My param 2
-CHIFFRAGE_MYPARAM2Tooltip=My param 2 tooltip
-CHIFFRAGE_DEFAULT_PRODUCT = Default product
-
-
-#
-# About page
-#
-About = About
-ChiffrageAbout = About Chiffrage
-ChiffrageAboutPage = Chiffrage about page
-
-#
 # Sample page
 #
 MyPageName = My page name

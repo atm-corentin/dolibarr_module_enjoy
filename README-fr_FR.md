@@ -1,5 +1,5 @@
 
-# MODULE CHIFFRAGE
+# MODULE CLIENJOYHOLIDAYS
 
 Ce module vous permet de créer des chiffrages que vous pourrez réutiliser ultérieurement comme référence.
 

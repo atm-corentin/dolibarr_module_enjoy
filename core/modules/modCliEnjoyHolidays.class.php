@@ -77,7 +77,7 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Url to the file with your last numberversion of this module
 		/*require_once __DIR__ . '/../../class/techatm.class.php';
-		$this->url_last_version = \chiffrage\TechATM::getLastModuleVersionUrl($this);*/
+		$this->url_last_version = \clienjoyholidays\TechATM::getLastModuleVersionUrl($this);*/
 
 		// Key used in llx_const table to save module status enabled/disabled (where enjoyholidays is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
@@ -178,7 +178,7 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Array to add new pages in new tabs
 		$this->tabs = array(
-			/*'thirdparty:+tabChiffrage:Chiffrage:clienjoyholidays@clienjoyholidays:$user->rights->clienjoyholidays->clienjoyholidays->read:/clienjoyholidays/chiffrage_list.php?socid=__ID__',*/
+			/*'thirdparty:+tabCliEnjoyHolidays:CliEnjoyHolidays:clienjoyholidays@clienjoyholidays:$user->rights->clienjoyholidays->clienjoyholidays->read:/clienjoyholidays/clienjoyholidays_list.php?socid=__ID__',*/
 		//);
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@enjoyholidays:$user->rights->enjoyholidays->read:/enjoyholidays/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
@@ -236,8 +236,8 @@ class modClienjoyHolidays extends DolibarrModules
 		// Add here list of php file(s) stored in clienjoyholidays/core/boxes that contains a class to show a widget.
 		$this->boxes = array(
 			//  0 => array(
-			//      'file' => 'chiffragewidget1.php@clienjoyholidays',
-			//      'note' => 'Widget provided by Chiffrage',
+			//      'file' => 'clienjoyholidayswidget1.php@clienjoyholidays',
+			//      'note' => 'Widget provided by CliEnjoyHolidays',
 			//      'enabledbydefaulton' => 'Home',
 			//  ),
 			//  ...
@@ -250,7 +250,7 @@ class modClienjoyHolidays extends DolibarrModules
 			//      'label' => 'MyJob label',
 			//      'jobtype' => 'method',
 			//      'class' => '/clienjoyholidays/class/clienjoyholidays.class.php',
-			//      'objectname' => 'Chiffrage',
+			//      'objectname' => 'CliEnjoyHolidays',
 			//      'method' => 'doScheduledJob',
 			//      'parameters' => '',
 			//      'comment' => 'Comment',
@@ -268,23 +268,23 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Permissions provided by this module
 		$this->rights = array();
-		/*$r = 0;
+		$r = 0;
 		// Add here entries to declare new permissions
 		/* BEGIN MODULEBUILDER PERMISSIONS */
-		/*$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("ReadobjectsofChiffrage"); // Permission label
+		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
+		$this->rights[$r][1] = $langs->trans("ReadobjectsofCliEnjoyHolidays"); // Permission label
 		$this->rights[$r][4] = 'clienjoyholidays';
 		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->clienjoyholidays->clienjoyholidays->read)
 		$r++;
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("CreateUpdateobjectsofChiffrage"); // Permission label
+		$this->rights[$r][1] = $langs->trans("CreateUpdateobjectsofCliEnjoyHolidays"); // Permission label
 		$this->rights[$r][4] = 'clienjoyholidays';
 		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->clienjoyholidays->clienjoyholidays->write)
 		$r++;
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("DeleteobjectsofChiffrage"); // Permission label
+		$this->rights[$r][1] = $langs->trans("DeleteobjectsofCliEnjoyHolidays"); // Permission label
 		$this->rights[$r][4] = 'clienjoyholidays';
-		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->clienjoyholidays->clienjoyholidays->delete)*/
+		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->clienjoyholidays->clienjoyholidays->delete)
 		//$r++;
 		/* END MODULEBUILDER PERMISSIONS */
 
@@ -293,274 +293,149 @@ class modClienjoyHolidays extends DolibarrModules
 		$r = 0;
 		// Add here entries to declare new menus
 		/* BEGIN MODULEBUILDER TOPMENU */
-//		$this->menu[$r++] = array(
-//			'fk_menu'=>'', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//			'type'=>'top', // This is a Top menu entry
-//			'titre'=>'ModuleenjoyholidaysName',
-//			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
-//			'mainmenu'=>'enjoyholidays',
-//			'leftmenu'=>'',
-//			'url'=>'/enjoyholidays/enjoyholidaysindex.php',
-//			'langs'=>'enjoyholidays@enjoyholidays', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//			'position'=>1000 + $r,
-//			'enabled'=>'$conf->enjoyholidays->enabled', // Define condition to show or hide menu entry. Use '$conf->enjoyholidays->enabled' if entry must be visible if module is enabled.
-//			'perms'=>'1', // Use 'perms'=>'$user->rights->enjoyholidays->enjoyholidays->read' if you want your menu with a permission rules
-//			'target'=>'',
-//			'user'=>2, // 0=Menu for internal users, 1=external users, 2=both
-//		);
+
+		$this->menu[$r++] = array(
+			'fk_menu'=>'', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'top', // This is a Top menu entry
+			'titre'=>'ModuleEnjoyholidaysName',
+			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
+			'mainmenu'=>'clienjoyholidaysmain',
+			'leftmenu'=>'clienjoyholidays',
+			'url'=>'/clienjoyholidays/clienjoyholidaysindex.php',
+			'langs'=>'clienjoyholidays@clienjoyholidays', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000 + $r,
+			'enabled'=>'$conf->clienjoyholidays->enabled', // Define condition to show or hide menu entry. Use '$conf->enjoyholidays->enabled' if entry must be visible if module is enabled.
+			'perms'=>'1', // Use 'perms'=>'$user->rights->enjoyholidays->enjoyholidays->read' if you want your menu with a permission rules
+			'target'=>'',
+			'user'=>2, // 0=Menu for internal users, 1=external users, 2=both
+		);
 		/* END MODULEBUILDER TOPMENU */
 
-		// BEGIN MODULEBUILDER LEFTMENU clienjoyholidays
-
-//		$this->menu[$r++]=array(
-//			'fk_menu'=>'fk_mainmenu=project',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//			'type'=>'left',                          // This is a Top menu entry
-//			'titre'=>'enjoyholidays',
-//			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
-//			'mainmenu'=>'project',
-//			'leftmenu'=>'enjoyholidays',
-//			'url'=>'/enjoyholidays/enjoyholidays_list.php',
-//			'langs'=>'enjoyholidays@enjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//			'position'=>1000+$r,
-//			'enabled'=>'$conf->enjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->enjoyholidays->enabled' if entry must be visible if module is enabled.
-//			'perms'=>'$user->rights->enjoyholidays->enjoyholidays->read',			                // Use 'perms'=>'$user->rights->enjoyholidays->level1->level2' if you want your menu with a permission rules
-//			'target'=>'',
-//			'prefix' => '<span class="fas fa-comment-dollar em092 pictofixedwidth enjoyholidays-left-menu-picto" style="color: #7e7772;"></span>',
-//			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-//		);
-//		$this->menu[$r++]=array(
-//			'fk_menu'=>'fk_mainmenu=project,fk_leftmenu=clienjoyholidays',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//			'type'=>'left',			                // This is a Left menu entry
-//			'titre'=>'NewEnjoyHolidays',
-//			'mainmenu'=>'project',
-//			'leftmenu'=>'enjoyholidays_enjoyholidays_new',
-//			'url'=>'/enjoyholidays/enjoyholidays_card.php?action=create',
-//			'langs'=>'enjoyholidays@enjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//			'position'=>1000+$r,
-//			'enabled'=>'$conf->enjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->enjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//			'perms'=>'$user->rights->enjoyholidays->enjoyholidays->write',			                // Use 'perms'=>'$user->rights->enjoyholidays->level1->level2' if you want your menu with a permission rules
-//			'target'=>'',
-//			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-//		);
-
-//		$this->menu[$r++]=array(
-//			'fk_menu'=>'fk_mainmenu=project,fk_leftmenu=enjoyholidays',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//			'type'=>'left',			                // This is a Left menu entry
-//			'titre'=>'List_EnjoyHolidays',
-//			'mainmenu'=>'project',
-//			'leftmenu'=>'enjoyholidays_enjoyholidays_list',
-//			'url'=>'/enjoyholidays/enjoyholidays_list.php',
-//			'langs'=>'enjoyholidays@enjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//			'position'=>1000+$r,
-//			'enabled'=>'$conf->enjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->enjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//			'perms'=>'$user->rights->enjoyholidays->enjoyholidays->read',			                // Use 'perms'=>'$user->rights->enjoyholidays->level1->level2' if you want your menu with a permission rules
-//			'target'=>'',
-//			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-//		);
-
-//		$this->menu[$r++]=array(
-//            'fk_menu'=>'fk_mainmenu=project,fk_leftmenu=enjoyholidays_enjoyholidays_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//            'type'=>'left',			                // This is a Left menu entry
-//            'titre'=>'Draft',
-//            'mainmenu'=>'project',
-//            'leftmenu'=>'enjoyholidays_enjoyholidays_list_draft',
-//            'url'=>'/enjoyholidays/enjoyholidays_list.php?leftmenu=enjoyholidays&search_status=0',
-//            'langs'=>'enjoyholidays@enjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//            'position'=>1000+$r,
-//            'enabled'=>'$conf->enjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->enjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//            'perms'=>'$user->rights->enjoyholidays->enjoyholidays->read',			                // Use 'perms'=>'$user->rights->enjoyholidays->level1->level2' if you want your menu with a permission rules
-//            'target'=>'',
-//            'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-//        );
-
-//		$this->menu[$r++]=array(
-//            'fk_menu'=>'fk_mainmenu=project,fk_leftmenu=enjoyholidays_enjoyholidays_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//            'type'=>'left',			                // This is a Left menu entry
-//            'titre'=>'CHIValidated',
-//            'mainmenu'=>'project',
-//            'leftmenu'=>'enjoyholidays_enjoyholidays_list_validate',
-//            'url'=>'/enjoyholidays/enjoyholidays_list.php?leftmenu=enjoyholidays&search_status=1',
-//            'langs'=>'enjoyholidays@enjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//            'position'=>1000+$r,
-//            'enabled'=>'$conf->enjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->enjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//            'perms'=>'$user->rights->enjoyholidays->enjoyholidays->read',			                // Use 'perms'=>'$user->rights->enjoyholidays->level1->level2' if you want your menu with a permission rules
-//            'target'=>'',
-//            'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-//        );
+		// BEGIN MODULEBUILDER LEFTMENU CLIENJOYHOLIDAYS
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=clienjoyholidaysmain',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',                          // This is a Top menu entry
+			'titre'=>'Formule de voyage',
+			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
+			'mainmenu'=>'clienjoyholidaysmain',
+			'leftmenu'=>'clienjoyholidays',
+			'url'=>'/clienjoyholidays/clienjoyholidays_list.php',
+			'langs'=>'chiffrage@chiffrage',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000+$r,
+			'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->chiffrage->enabled' if entry must be visible if module is enabled.
+			'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read',			                // Use 'perms'=>'$user->rights->chiffrage->level1->level2' if you want your menu with a permission rules
+			'target'=>'',
+			'prefix' => '<span class="fas fa-comment-dollar em092 pictofixedwidth chiffrage-left-menu-picto" style="color: #7e7772;"></span>',
+			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
+		);
 
 
-//        $this->menu[$r++]=array(
-//            'fk_menu'=>'fk_mainmenu=project,fk_leftmenu=enjoyholidays_enjoyholidays_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//            'type'=>'left',			                // This is a Left menu entry
-//            'titre'=>'CHIEstimated',
-//            'mainmenu'=>'project',
-//            'leftmenu'=>'enjoyholidays_enjoyholidays_list_estimated',
-//            'url'=>'/enjoyholidays/enjoyholidays_list.php?leftmenu=enjoyholidays&search_status=10',
-//            'langs'=>'enjoyholidays@enjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//            'position'=>1000+$r,
-//            'enabled'=>'$conf->enjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->enjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//            'perms'=>'$user->rights->enjoyholidays->enjoyholidays->read',			                // Use 'perms'=>'$user->rights->enjoyholidays->level1->level2' if you want your menu with a permission rules
-//            'target'=>'',
-//            'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-//        );
+        $this->menu[$r++]=array(
+            'fk_menu'=>'fk_mainmenu=clienjoyholidaysmain,fk_leftmenu=clienjoyholidays',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'type'=>'left',			                // This is a Left menu entry
+            'titre'=>'New',
+            'mainmenu'=>'clienjoyholidaysmain',
+            'leftmenu'=>'clienjoyholidays_clienjoyholidays_new',
+            'url'=>'/clienjoyholidays/clienjoyholidays_card.php',
+            'langs'=>'clienjoyholidays@clienjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'position'=>1000+$r,
+            'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read',			                // Use 'perms'=>'$user->rights->clienjoyholidays->level1->level2' if you want your menu with a permission rules
+            'target'=>'',
+            'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
+        );
 
-//		$this->menu[$r++]=array(
-//			'fk_menu'=>'fk_mainmenu=project,fk_leftmenu=enjoyholidays_enjoyholidays_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//			'type'=>'left',			                // This is a Left menu entry
-//			'titre'=>'CHIConverted',
-//			'mainmenu'=>'project',
-//			'leftmenu'=>'enjoyholidays_enjoyholidays_list_converted',
-//			'url'=>'/enjoyholidays/enjoyholidays_list.php?leftmenu=enjoyholidays&search_status=13',
-//			'langs'=>'enjoyholidays@enjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//			'position'=>1000+$r,
-//			'enabled'=>'$conf->enjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->enjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//			'perms'=>'$user->rights->enjoyholidays->enjoyholidays->read',			                // Use 'perms'=>'$user->rights->enjoyholidays->level1->level2' if you want your menu with a permission rules
-//			'target'=>'',
-//			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-//		);
-
-
-//		$this->menu[$r++]=array(
-//			'fk_menu'=>'fk_mainmenu=project,fk_leftmenu=enjoyholidays_enjoyholidays_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//			'type'=>'left',			                // This is a Left menu entry
-//			'titre'=>'CHIRealized',
-//			'mainmenu'=>'project',
-//			'leftmenu'=>'enjoyholidays_enjoyholidays_list_realized',
-//			'url'=>'/enjoyholidays/enjoyholidays_list.php?leftmenu=enjoyholidays&search_status=14',
-//			'langs'=>'enjoyholidays@enjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//			'position'=>1000+$r,
-//			'enabled'=>'$conf->enjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->enjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//			'perms'=>'$user->rights->enjoyholidays->enjoyholidays->read',			                // Use 'perms'=>'$user->rights->enjoyholidays->level1->level2' if you want your menu with a permission rules
-//			'target'=>'',
-//			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-//		);
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=clienjoyholidaysmain,fk_leftmenu=clienjoyholidays',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',			                // This is a Left menu entry
+			'titre'=>'Liste',
+			'mainmenu'=>'clienjoyholidaysmain',
+			'leftmenu'=>'clienjoyholidays_clienjoyholidays_list',
+			'url'=>'/clienjoyholidays/clienjoyholidays_list.php',
+			'langs'=>'clienjoyholidays@clienjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000+$r,
+			'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read',			                // Use 'perms'=>'$user->rights->clienjoyholidays->level1->level2' if you want your menu with a permission rules
+			'target'=>'',
+			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
+		);
 
 
-//        $this->menu[$r++]=array(
-//            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//            'fk_menu'=>'fk_mainmenu=clienjoyholidays',
-//            // This is a Left menu entry
-//            'type'=>'left',
-//            'titre'=>'Chiffrage',
-//            'mainmenu'=>'clienjoyholidays',
-//            'leftmenu'=>'chiffrage_chiffrage',
-//            'url'=>'/clienjoyholidays/chiffrageindex.php',
-//            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//            'langs'=>'clienjoyholidays@clienjoyholidays',
-//            'position'=>1100+$r,
-//            // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//            'enabled'=>'$conf->clienjoyholidays->enabled',
-//            // Use 'perms'=>'$user->rights->clienjoyholidays->level1->level2' if you want your menu with a permission rules
-//            'perms'=>'1',
-//            'target'=>'',
-//            // 0=Menu for internal users, 1=external users, 2=both
-//            'user'=>2,
-//        );
-//        $this->menu[$r++]=array(
-//            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//            'fk_menu'=>'fk_mainmenu=clienjoyholidays,fk_leftmenu=chiffrage_chiffrage',
-//            // This is a Left menu entry
-//            'type'=>'left',
-//            'titre'=>'Nouveau Chiffrage',
-//            'mainmenu'=>'clienjoyholidays',
-//            'leftmenu'=>'clienjoyholidays',
-//            'url'=>'/clienjoyholidays/chiffrage_card.php?action=create',
-//            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//            'langs'=>'clienjoyholidays@clienjoyholidays',
-//            'position'=>1100+$r,
-//            // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//            'enabled'=>'$conf->clienjoyholidays->enabled',
-//            // Use 'perms'=>'$user->rights->clienjoyholidays->level1->level2' if you want your menu with a permission rules
-//            'perms'=>'1',
-//            'target'=>'',
-//            // 0=Menu for internal users, 1=external users, 2=both
-//            'user'=>2
-//        );
-
-//        $this->menu[$r++]=array(
-//            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-//            'fk_menu'=>'fk_mainmenu=clienjoyholidays,fk_leftmenu=chiffrage_chiffrage',
-//            // This is a Left menu entry
-//            'type'=>'left',
-//            'titre'=>'Liste',
-//            'mainmenu'=>'clienjoyholidays',
-//            'leftmenu'=>'clienjoyholidays',
-//            'url'=>'/clienjoyholidays/chiffrage_list.php',
-//            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//            'langs'=>'clienjoyholidays@clienjoyholidays',
-//            'position'=>1100+$r,
-//            // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//            'enabled'=>'$conf->clienjoyholidays->enabled',
-//            // Use 'perms'=>'$user->rights->clienjoyholidays->level1->level2' if you want your menu with a permission rules
-//            'perms'=>'1',
-//            'target'=>'',
-//            // 0=Menu for internal users, 1=external users, 2=both
-//            'user'=>2
-//        );
-
-//
-//        // INSTANCE WEB
-//        $this->menu[$r++]=array(
-//            'fk_menu'=>'fk_mainmenu=chifrage',			                // Put 0 if this is a top menu
-//            'type'=>'left',			                // This is a Top menu entry
-//            'titre'=>$langs->trans('TopMenuWebInstance'),
-//            'mainmenu'=>'clienjoyholidays',
-//            'leftmenu'=>'clienjoyholidays',
-//            'url'=>'/webhost/webinstance_list.php',
-//            'langs'=>'webhost@webhost',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-//            'position'=>1100+$r,
-//            'enabled'=>'$conf->webhost->enabled',	// Define condition to show or hide menu entry. Use '$conf->missionorder->enabled' if entry must be visible if module is enabled.
-//            'perms'=>'$user->rights->webhost->instance->read',			                // Use 'perms'=>'$user->rights->missionorder->level1->level2' if you want your menu with a permission rules
-//            'target'=>'',
-//            'prefix' => '<span class="fas fa-globe em092 pictofixedwidth webhost-left-menu-picto" style="color: #7e7772;"></span>',
-//            'user'=>2
-//        );
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=clienjoyholidaysmain,fk_leftmenu=clienjoyholidays_clienjoyholidays_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',			                // This is a Left menu entry
+			'titre'=>'Brouillon',
+			'mainmenu'=>'clienjoyholidaysmain',
+			'leftmenu'=>'clienjoyholidays_clienjoyholidays_list_draft',
+			'url'=>'/clienjoyholidays/clienjoyholidays_list.php?leftmenu=clienjoyholidays&search_status=0',
+			'langs'=>'clienjoyholidays@clienjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000+$r,
+			'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read',			                // Use 'perms'=>'$user->rights->clienjoyholidays->level1->level2' if you want your menu with a permission rules
+			'target'=>'',
+			'user'=>2,		                // 0=Menu for internal users, 1=external users, 2=both
+		);
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=clienjoyholidaysmain,fk_leftmenu=clienjoyholidays_clienjoyholidays_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',			                // This is a Left menu entry
+			'titre'=>'Verifie',
+			'mainmenu'=>'clienjoyholidaysmain',
+			'leftmenu'=>'clienjoyholidays_clienjoyholidays_list_verified',
+			'url'=>'/clienjoyholidays/clienjoyholidays_list.php?leftmenu=clienjoyholidays&search_status=1',
+			'langs'=>'clienjoyholidays@clienjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000+$r,
+			'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read',			                // Use 'perms'=>'$user->rights->clienjoyholidays->level1->level2' if you want your menu with a permission rules
+			'target'=>'',
+			'user'=>2,		                // 0=Menu for internal users, 1=external users, 2=both
+		);
 
 
 
 
 
-		/* END MODULEBUILDER LEFTMENU CHIFFRAGE */
+
+		/* END MODULEBUILDER LEFTMENU CLIENJOYHOLIDAYS */
 		// Exports profiles provided by this module
 		$r = 1;
-		/* BEGIN MODULEBUILDER EXPORT CHIFFRAGE */
+		/* BEGIN MODULEBUILDER EXPORT CLIENJOYHOLIDAYS */
 		/*
 		$langs->load("clienjoyholidays@clienjoyholidays");
 		$this->export_code[$r]=$this->rights_class.'_'.$r;
-		$this->export_label[$r]='ChiffrageLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
+		$this->export_label[$r]='CliEnjoyHolidaysLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
 		$this->export_icon[$r]='clienjoyholidays@clienjoyholidays';
 		// Define $this->export_fields_array, $this->export_TypeFields_array and $this->export_entities_array
-		$keyforclass = 'Chiffrage'; $keyforclassfile='/clienjoyholidays/class/clienjoyholidays.class.php'; $keyforelement='clienjoyholidays@clienjoyholidays';
+		$keyforclass = 'CliEnjoyHolidays'; $keyforclassfile='/clienjoyholidays/class/clienjoyholidays.class.php'; $keyforelement='clienjoyholidays@clienjoyholidays';
 		include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
 		//$this->export_fields_array[$r]['t.fieldtoadd']='FieldToAdd'; $this->export_TypeFields_array[$r]['t.fieldtoadd']='Text';
 		//unset($this->export_fields_array[$r]['t.fieldtoremove']);
-		//$keyforclass = 'ChiffrageLine'; $keyforclassfile='/clienjoyholidays/class/clienjoyholidays.class.php'; $keyforelement='chiffrageline@clienjoyholidays'; $keyforalias='tl';
+		//$keyforclass = 'CliEnjoyHolidaysLine'; $keyforclassfile='/clienjoyholidays/class/clienjoyholidays.class.php'; $keyforelement='clienjoyholidaysline@clienjoyholidays'; $keyforalias='tl';
 		//include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
 		$keyforselect='clienjoyholidays'; $keyforaliasextra='extra'; $keyforelement='clienjoyholidays@clienjoyholidays';
 		include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
-		//$keyforselect='chiffrageline'; $keyforaliasextra='extraline'; $keyforelement='chiffrageline@clienjoyholidays';
+		//$keyforselect='clienjoyholidaysline'; $keyforaliasextra='extraline'; $keyforelement='clienjoyholidaysline@clienjoyholidays';
 		//include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
-		//$this->export_dependencies_array[$r] = array('chiffrageline'=>array('tl.rowid','tl.ref')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
+		//$this->export_dependencies_array[$r] = array('clienjoyholidaysline'=>array('tl.rowid','tl.ref')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
 		//$this->export_special_array[$r] = array('t.field'=>'...');
 		//$this->export_examplevalues_array[$r] = array('t.field'=>'Example');
 		//$this->export_help_array[$r] = array('t.field'=>'FieldDescHelp');
 		$this->export_sql_start[$r]='SELECT DISTINCT ';
 		$this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'clienjoyholidays as t';
-		//$this->export_sql_end[$r]  =' LEFT JOIN '.MAIN_DB_PREFIX.'chiffrage_line as tl ON tl.fk_chiffrage = t.rowid';
+		//$this->export_sql_end[$r]  =' LEFT JOIN '.MAIN_DB_PREFIX.'clienjoyholidays_line as tl ON tl.fk_clienjoyholidays = t.rowid';
 		$this->export_sql_end[$r] .=' WHERE 1 = 1';
 		$this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('clienjoyholidays').')';
 		$r++; */
-		/* END MODULEBUILDER EXPORT CHIFFRAGE */
+		/* END MODULEBUILDER EXPORT CLIENJOYHOLIDAYS */
 
 		// Imports profiles provided by this module
 		$r = 1;
-		/* BEGIN MODULEBUILDER IMPORT CHIFFRAGE */
+		/* BEGIN MODULEBUILDER IMPORT CLIENJOYHOLIDAYS */
 		/*
 		 $langs->load("clienjoyholidays@clienjoyholidays");
 		 $this->export_code[$r]=$this->rights_class.'_'.$r;
-		 $this->export_label[$r]='ChiffrageLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
+		 $this->export_label[$r]='CliEnjoyHolidaysLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
 		 $this->export_icon[$r]='clienjoyholidays@clienjoyholidays';
-		 $keyforclass = 'Chiffrage'; $keyforclassfile='/clienjoyholidays/class/clienjoyholidays.class.php'; $keyforelement='clienjoyholidays@clienjoyholidays';
+		 $keyforclass = 'CliEnjoyHolidays'; $keyforclassfile='/clienjoyholidays/class/clienjoyholidays.class.php'; $keyforelement='clienjoyholidays@clienjoyholidays';
 		 include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
 		 $keyforselect='clienjoyholidays'; $keyforaliasextra='extra'; $keyforelement='clienjoyholidays@clienjoyholidays';
 		 include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
@@ -570,7 +445,7 @@ class modClienjoyHolidays extends DolibarrModules
 		 $this->export_sql_end[$r] .=' WHERE 1 = 1';
 		 $this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('clienjoyholidays').')';
 		 $r++; */
-		/* END MODULEBUILDER IMPORT CHIFFRAGE */
+		/* END MODULEBUILDER IMPORT CLIENJOYHOLIDAYS */
 	}
 
 	/**

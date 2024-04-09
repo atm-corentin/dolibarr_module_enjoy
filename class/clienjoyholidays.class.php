@@ -24,8 +24,7 @@
 
 // Put here all includes required by your class file
 require_once DOL_DOCUMENT_ROOT.'/core/class/commonobject.class.php';
-//require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
-//require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
+
 
 /**
  * Class for CliEnjoyHolidays
@@ -66,7 +65,7 @@ class CliEnjoyHolidays extends CommonObject
 
 	const STATUS_DRAFT = 0;
 	const STATUS_VALIDATED = 1;
-	const STATUS_CANCELED = 9;
+
 
 
 
@@ -100,77 +99,41 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 * @var array  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
 	 */
-	public $fields=array(
-		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'css'=>'left', 'comment'=>"Id"),
-		'ref' => array('type'=>'varchar(40)', 'label'=>'CEHRef', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'default'=>'(CEH)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
-		'libelle' => array('type'=>'text', 'label'=>'CEHLibelle', 'enabled'=>'1', 'position'=>60, 'notnull'=>1, 'visible'=>0,'default'=>'(LIBELLE)'),
-		'destination_country' => array('type'=>'varchar(40)', 'label'=>'CEHDestinationCountry', 'enabled'=>'1', 'position'=>600, 'notnull'=>1, 'visible'=>0, 'default'=>'(COUNTRY)'),
-		'amount' => array('type'=>'price', 'label'=>'CEHamount', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>0, 'default'=>'null', 'isameasure'=>'1', 'help'=>"Help text for amount",),
-		'start_date' => array('type'=>'date', 'label'=>'CEHStartDate', 'enabled'=>'1', 'position'=>500, 'notnull'=>0, 'visible'=>-2,),
-		'returndate' => array('type'=>'date', 'label'=>'CEHReturnDate', 'enabled'=>'1', 'position'=>500, 'notnull'=>0, 'visible'=>-2,),
-		'start_time' => array('type'=>'datetime', 'label'=>'CEHStartTime', 'enabled'=>'1', 'position'=>500, 'notnull'=>0, 'visible'=>-2,),
-		'return_time' => array('type'=>'datetime', 'label'=>'CEHReturnTime', 'enabled'=>'1', 'position'=>500, 'notnull'=>0, 'visible'=>-2,),
-		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'notnull'=>1, 'position'=>1000, 'visible'=>5, 'default'=>0,'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;','10'=>'CHIEstimated','13'=>'CHIConverted','14'=>'CHIRealized'),),
-		'travel_mod' => array('type'=>'varchar(14)', 'label'=>'CEHtravelMod', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>-2,),
-		'module_name' => array('type'=>'integer:WebModule:webhost/class/webmodule.class.php', 'label'=>'CEHModuleName', 'enabled'=>'1', 'position'=>58, 'notnull'=>0, 'visible'=>1, 'searchall'=>1,'css'=>'minwidth200 maxwidth500 widthcentpercentminusx',),
-		'keywords' => array('type'=>'varchar(128)', 'label'=>'CEHKeywords', 'enabled'=>'1', 'position'=>56, 'notnull'=>0, 'visible'=>1,'showoncombobox'=>'0','css'=>'minwidth200 maxwidth500 widthcentpercentminusx',),
-		'entity' => array('type'=>'integer', 'label'=>'Entity', 'enabled'=>1, 'visible'=>0, 'notnull'=> 1, 'default'=>1, 'index'=>1, 'position'=>20),
-	);
+	public $fields = [
+		'ref' => array('type'=>'varchar(40)', 'label'=>'Ref', 'enabled'=>'1', 'position'=> 1, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
+		'label' => array('type' => 'varchar(160)', 'label' => 'Label', 'enabled' => '1', 'position' => 2, 'notnull' => 1, 'visible' => 1),
+		'amount' => array('type' => 'price', 'label' => 'Price', 'enabled' => '1', 'notnull' => 0, 'position' => 3, 'visible' => 1),
+		'fk_destination_country' => array('type' => 'integer:Ccountry:/core/class/ccountry.class.php', 'label' => 'Pays de destination', 'enabled' => '1', 'notnull' => 1, 'position' => 4, 'visible' => 1, 'foreignkey' => 'c_country.rowid'),
+		'start_date' => array('type' => 'datetime', 'label' => 'Départ', 'enabled' => '1', 'notnull' => 0, 'position' => 5, 'visible' => 1),
+		'return_date' => array('type' => 'datetime', 'label' => 'Arrivée', 'enabled' => '1', 'notnull' => 0, 'position' => 6, 'visible' => 1),
+		'fk_travel_mode' => array('type' => 'sellist:c_transport_mode:label:rowid::(active:=:1)', 'label' => 'Mode de transport', 'enabled' => '1', 'notnull' => 0, 'position' => 7, 'visible' => 1, 'foreignkey' => 'c_transport_mode.rowid'),
 
-	public $rowid;
+		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=> 1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>10, 'css'=>'left', 'comment'=>"Id"),
+		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
+		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>30, 'notnull'=>-1, 'visible'=>-2,),
+		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>-2,),
+		'date_creation' => array('type'=>'date', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-2,),
+		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>60, 'notnull'=>0, 'visible'=>-2,),
+		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'notnull'=>1, 'position'=>70, 'visible'=>5, 'default'=>0,'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;'),),
+	];
+
 	public $ref;
-	public $libelle;
-	public $destination_country;
+	public $label;
 	public $amount;
-	public $status;
+	public $fk_destination_country;
+
 	public $start_date;
 	public $return_date;
-	public $start_time;
-	public $return_time;
-	public $travel_mod;
-	public $module_name;
-	public $keywords;
-	public $entity;
-
+	public $fk_travel_mod;
+	public $rowid;
+	public $fk_user_creat;
+	public $fk_user_modif;
+	public $tms;
+	public $date_creation;
+	public $import_key;
+	public $status;
 
 	// END MODULEBUILDER PROPERTIES
-
-
-	// If this object has a subtable with lines
-
-	// /**
-	//  * @var string    Name of subtable line
-	//  */
-	// public $table_element_line = 'chiffrage_chiffrageline';
-
-	// /**
-	//  * @var string    Field with ID of parent key if this object has a parent
-	//  */
-	// public $fk_element = 'fk_chiffrage';
-
-	// /**
-	//  * @var string    Name of subtable class that manage subtable lines
-	//  */
-	// public $class_element_line = 'Chiffrageline';
-
-	// /**
-	//  * @var array	List of child tables. To test if we can delete object.
-	//  */
-	// protected $childtables = array();
-
-	// /**
-	//  * @var array    List of child tables. To know object to delete on cascade.
-	//  *               If name matches '@ClassNAme:FilePathClass;ParentFkFieldName' it will
-	//  *               call method deleteByParentField(parentId, ParentFkFieldName) to fetch and delete child object
-	//  */
-	// protected $childtablesoncascade = array('chiffrage_chiffragedet');
-
-	// /**
-	//  * @var ChiffrageLine[]     Array of subtable lines
-	//  */
-	// public $lines = array();
-
-
 
 	/**
 	 * Constructor
@@ -203,7 +166,7 @@ class CliEnjoyHolidays extends CommonObject
 
 
 		// Example to show how to set values of fields definition dynamically
-		/*if ($user->rights->chiffrage->chiffrage->read) {
+		/*if ($user->rights->clienjoyholidays->clienjoyholidays->read) {
 			$this->fields['myfield']['visible'] = 1;
 			$this->fields['myfield']['noteditable'] = 0;
 		}*/
@@ -284,38 +247,32 @@ class CliEnjoyHolidays extends CommonObject
 		if (property_exists($object, 'ref')) {
 			$object->ref = empty($this->fields['ref']['default']) ? "Copy_Of_".$object->ref : $this->fields['ref']['default'];
 		}
-		if (property_exists($object, 'libelle')) {
-			$object->ref = empty($this->fields['libelle']['default']) ? "Copy_Of_".$object->libelle : $this->fields['libelle']['default'];
-		}
-		if (property_exists($object, 'destination_country')) {
-			$object->ref = empty($this->fields['destination_country']['default']) ? "Copy_Of_".$object->destination_country : $this->fields['destination_country']['default'];
-		}
-		if (property_exists($object, 'start_date')) {
-			$object->start_date = null;
-		}
-		if (property_exists($object, 'return_date')) {
-			$object->return_date_date = null;
-		}
-		if (property_exists($object, 'start_time')) {
-			$object->start_time = null;
-		}
-        if (property_exists($object, 'return_time')) {
-            $object->return_time = null;
-        }
-        if (property_exists($object, 'amount')) {
-            $object->amount = null;
-        }
-        if (property_exists($object, 'travel_mod')) {
-            $object->travel_mod = null;
-        }
-        if (property_exists($object, 'module_name')) {
-            $object->module_name = null;
-        }
-        if (property_exists($object, 'keywords')) {
-            $object->keywords = null;
-        }
 		if (property_exists($object, 'status')) {
 			$object->status = self::STATUS_DRAFT;
+		}
+		if (property_exists($object, 'date_creation')) {
+			$object->date_creation = dol_now();
+		}
+		if (property_exists($object, 'date_modification')) {
+			$object->date_modification = null;
+		}
+		if (property_exists($object, 'tech_detail')) {
+			$object->tech_detail = null;
+		}
+		if (property_exists($object, 'estimate_date')) {
+			$object->estimate_date = null;
+		}
+		if (property_exists($object, 'qty')) {
+			$object->qty = null;
+		}
+		if (property_exists($object, 'dev_estimate')) {
+			$object->dev_estimate = null;
+		}
+		if (property_exists($object, 'module_name')) {
+			$object->module_name = null;
+		}
+		if (property_exists($object, 'keywords')) {
+			$object->keywords = null;
 		}
 		// ...
 		// Clear extrafields that are unique
@@ -359,7 +316,7 @@ class CliEnjoyHolidays extends CommonObject
 
 		// End
 		if (!$error) {
-            setEventMessage("CHICreateToClone");
+			setEventMessage("CEHCreateToClone");
 			$this->db->commit();
 			return $object;
 		} else {
@@ -512,18 +469,9 @@ class CliEnjoyHolidays extends CommonObject
 	 */
 	public function update(User $user, $notrigger = false)
 	{
-		// Set status to estimated if qty is more than 0 and status is already set to validated
-		if ($this->status == $this::STATUS_VALIDATED && $this->qty > 0) {
-			$this->status = $this::STATUS_ESTIMATED;
-			if ($this->estimate_date == null) {
-				$this->estimate_date = dol_now();
-                //TODO Pourquoi le langs trans ne marche pas ?
-                setEventMessage('CHIUpdateDateEstmated');
-			}
-		}
 
-		// Set status to validated if qty is equal to 0 or null
-		if (($this->qty == 0 || $this->qty == null) && $this->status != $this::STATUS_DRAFT) {
+		// Set status to validated ref,label,fk_destination_country is not null
+		if ($this->ref != null && $this->label != null && $this->fk_destination_country != null && $this->status == $this::STATUS_DRAFT) {
 			$this->status = $this::STATUS_VALIDATED;
 		}
 
@@ -543,11 +491,11 @@ class CliEnjoyHolidays extends CommonObject
 		//return $this->deleteCommon($user, $notrigger, 1);
 	}
 
-    public function addChiffrageToPropal(User $user, $notrigger = false)
-    {
-        return $this->deleteCommon($user, $notrigger);
-        //return $this->deleteCommon($user, $notrigger, 1);
-    }
+	public function addCliEnjoyHolidaysToPropal(User $user, $notrigger = false)
+	{
+		return $this->deleteCommon($user, $notrigger);
+		//return $this->deleteCommon($user, $notrigger, 1);
+	}
 
 	/**
 	 *  Delete a line of object in database
@@ -593,8 +541,8 @@ class CliEnjoyHolidays extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->chiffrage->chiffrage->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->chiffrage->chiffrage->chiffrage_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->clienjoyholidays->clienjoyholidays->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->clienjoyholidays->clienjoyholidays->clienjoyholidays_advance->validate))))
 		 {
 		 $this->error='NotEnoughPermissions';
 		 dol_syslog(get_class($this)."::valid ".$this->error, LOG_ERR);
@@ -636,7 +584,7 @@ class CliEnjoyHolidays extends CommonObject
 
 			if (!$error && !$notrigger) {
 				// Call trigger
-				$result = $this->call_trigger('CHIFFRAGE_VALIDATE', $user);
+				$result = $this->call_trigger('CLIENJOYHOLIDAYS_VALIDATE', $user);
 				if ($result < 0) {
 					$error++;
 				}
@@ -650,8 +598,8 @@ class CliEnjoyHolidays extends CommonObject
 			// Rename directory if dir was a temporary ref
 			if (preg_match('/^[\(]?PROV/i', $this->ref)) {
 				// Now we rename also files into index
-				$sql = 'UPDATE '.MAIN_DB_PREFIX."ecm_files set filename = CONCAT('".$this->db->escape($this->newref)."', SUBSTR(filename, ".(strlen($this->ref) + 1).")), filepath = 'chiffrage/".$this->db->escape($this->newref)."'";
-				$sql .= " WHERE filename LIKE '".$this->db->escape($this->ref)."%' AND filepath = 'chiffrage/".$this->db->escape($this->ref)."' and entity = ".$conf->entity;
+				$sql = 'UPDATE '.MAIN_DB_PREFIX."ecm_files set filename = CONCAT('".$this->db->escape($this->newref)."', SUBSTR(filename, ".(strlen($this->ref) + 1).")), filepath = 'clienjoyholidays/".$this->db->escape($this->newref)."'";
+				$sql .= " WHERE filename LIKE '".$this->db->escape($this->ref)."%' AND filepath = 'clienjoyholidays/".$this->db->escape($this->ref)."' and entity = ".$conf->entity;
 				$resql = $this->db->query($sql);
 				if (!$resql) {
 					$error++; $this->error = $this->db->lasterror();
@@ -660,15 +608,15 @@ class CliEnjoyHolidays extends CommonObject
 				// We rename directory ($this->ref = old ref, $num = new ref) in order not to lose the attachments
 				$oldref = dol_sanitizeFileName($this->ref);
 				$newref = dol_sanitizeFileName($num);
-				$dirsource = $conf->chiffrage->dir_output.'/chiffrage/'.$oldref;
-				$dirdest = $conf->chiffrage->dir_output.'/chiffrage/'.$newref;
+				$dirsource = $conf->clienjoyholidays->dir_output.'/clienjoyholidays/'.$oldref;
+				$dirdest = $conf->clienjoyholidays->dir_output.'/clienjoyholidays/'.$newref;
 				if (!$error && file_exists($dirsource)) {
 					dol_syslog(get_class($this)."::validate() rename dir ".$dirsource." into ".$dirdest);
 
 					if (@rename($dirsource, $dirdest)) {
 						dol_syslog("Rename ok");
 						// Rename docs starting with $oldref with $newref
-						$listoffiles = dol_dir_list($conf->chiffrage->dir_output.'/chiffrage/'.$newref, 'files', 1, '^'.preg_quote($oldref, '/'));
+						$listoffiles = dol_dir_list($conf->clienjoyholidays->dir_output.'/clienjoyholidays/'.$newref, 'files', 1, '^'.preg_quote($oldref, '/'));
 						foreach ($listoffiles as $fileentry) {
 							$dirsource = $fileentry['name'];
 							$dirdest = preg_replace('/^'.preg_quote($oldref, '/').'/', $newref, $dirsource);
@@ -711,14 +659,14 @@ class CliEnjoyHolidays extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->chiffrage->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->chiffrage->chiffrage_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->clienjoyholidays->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->clienjoyholidays->clienjoyholidays_advance->validate))))
 		 {
 		 $this->error='Permission denied';
 		 return -1;
 		 }*/
 
-		return $this->setStatusCommon($user, self::STATUS_DRAFT, $notrigger, 'CHIFFRAGE_UNVALIDATE');
+		return $this->setStatusCommon($user, self::STATUS_DRAFT, $notrigger, 'CLIENJOYHOLIDAYS_UNVALIDATE');
 	}
 
 	/**
@@ -735,14 +683,14 @@ class CliEnjoyHolidays extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->chiffrage->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->chiffrage->chiffrage_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->clienjoyholidays->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->clienjoyholidays->clienjoyholidays_advance->validate))))
 		 {
 		 $this->error='Permission denied';
 		 return -1;
 		 }*/
 
-		return $this->setStatusCommon($user, self::STATUS_CANCELED, $notrigger, 'CHIFFRAGE_CANCEL');
+		return $this->setStatusCommon($user, self::STATUS_CANCELED, $notrigger, 'CLIENJOYHOLIDAYS_CANCEL');
 	}
 
 	/**
@@ -759,14 +707,14 @@ class CliEnjoyHolidays extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->chiffrage->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->chiffrage->chiffrage_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->clienjoyholidays->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->clienjoyholidays->clienjoyholidays_advance->validate))))
 		 {
 		 $this->error='Permission denied';
 		 return -1;
 		 }*/
 
-		return $this->setStatusCommon($user, self::STATUS_VALIDATED, $notrigger, 'CHIFFRAGE_REOPEN');
+		return $this->setStatusCommon($user, self::STATUS_VALIDATED, $notrigger, 'CLIENJOYHOLIDAYS_REOPEN');
 	}
 
 	/**
@@ -793,7 +741,7 @@ class CliEnjoyHolidays extends CommonObject
 
 			$result = '';
 
-			$label = img_picto('', $this->picto) . ' <u>' . $langs->trans("Chiffrage") . '</u>';
+			$label = img_picto('', $this->picto) . ' <u>' . $langs->trans("CliEnjoyHolidays") . '</u>';
 			if (isset($this->status)) {
 				$label .= ' ' . $this->getLibStatut(5);
 			}
@@ -810,7 +758,7 @@ class CliEnjoyHolidays extends CommonObject
 //				$label .= '<b>' . $langs->trans($this->fields['keywords']['label']) . ':</b> ' . str_replace("\r\n", "", $this->keywords);
 			}
 
-			$url = dol_buildpath('/chiffrage/chiffrage_card.php', 1) . '?id=' . $this->id;
+			$url = dol_buildpath('/clienjoyholidays/clienjoyholidays_card.php', 1) . '?id=' . $this->id;
 
 			if ($option != 'nolink') {
 				// Add param to save lastsearch_values or not
@@ -826,7 +774,7 @@ class CliEnjoyHolidays extends CommonObject
 			$linkclose = '';
 			if (empty($notooltip)) {
 				if (getDolGlobalString('MAIN_OPTIMIZEFORTEXTBROWSER')) {
-					$label = $langs->trans("ShowChiffrage");
+					$label = $langs->trans("ShowCliEnjoyHolidays");
 					$linkclose .= ' alt="' . dol_escape_htmltag($label, 1) . '"';
 				}
 				$linkclose .= ' title="' . dol_escape_htmltag($label, 1) . '"';
@@ -887,7 +835,7 @@ class CliEnjoyHolidays extends CommonObject
 			//if ($withpicto != 2) $result.=(($addlabel && $this->label) ? $sep . dol_trunc($this->label, ($addlabel > 1 ? $addlabel : 0)) : '');
 
 			global $action, $hookmanager;
-			$hookmanager->initHooks(array('chiffragedao'));
+			$hookmanager->initHooks(array('clienjoyholidaysdao'));
 			$parameters = array('id' => $this->id, 'getnomurl' => $result);
 			$reshook = $hookmanager->executeHooks('getNomUrl', $parameters, $this, $action); // Note that $action and $object may have been modified by some hooks
 			if ($reshook > 0) {
@@ -924,23 +872,23 @@ class CliEnjoyHolidays extends CommonObject
 		// phpcs:enable
 		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
 			global $langs;
-			//$langs->load("chiffrage@chiffrage");
+			//$langs->load("clienjoyholidays@clienjoyholidays");
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('Draft');
-			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('CHIValidated');
+			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('CEHValidated');
 			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('Disabled');
-			$this->labelStatus[self::STATUS_ESTIMATED] = $langs->trans('CHIEstimated');
-			$this->labelStatus[self::STATUS_PROPOSED] = $langs->trans('CHIProposed');
-			$this->labelStatus[self::STATUS_SOLD] = $langs->trans('CHISold');
-			$this->labelStatus[self::STATUS_CONVERTED] = $langs->trans('CHIConverted');
-			$this->labelStatus[self::STATUS_REALIZED] = $langs->trans('CHIRealized');
+			$this->labelStatus[self::STATUS_ESTIMATED] = $langs->trans('CEHEstimated');
+			$this->labelStatus[self::STATUS_PROPOSED] = $langs->trans('CEHProposed');
+			$this->labelStatus[self::STATUS_SOLD] = $langs->trans('CEHSold');
+			$this->labelStatus[self::STATUS_CONVERTED] = $langs->trans('CEHConverted');
+			$this->labelStatus[self::STATUS_REALIZED] = $langs->trans('CEHRealized');
 			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('Draft');
-			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('CHIValidated');
+			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('CEHValidated');
 			$this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('Disabled');
-			$this->labelStatusShort[self::STATUS_ESTIMATED] = $langs->trans('CHIEstimated');
-			$this->labelStatusShort[self::STATUS_PROPOSED] = $langs->trans('CHIProposed');
-			$this->labelStatusShort[self::STATUS_SOLD] = $langs->trans('CHISold');
-			$this->labelStatusShort[self::STATUS_CONVERTED] = $langs->trans('CHIConverted');
-			$this->labelStatusShort[self::STATUS_REALIZED] = $langs->trans('CHIRealized');
+			$this->labelStatusShort[self::STATUS_ESTIMATED] = $langs->trans('CEHEstimated');
+			$this->labelStatusShort[self::STATUS_PROPOSED] = $langs->trans('CEHProposed');
+			$this->labelStatusShort[self::STATUS_SOLD] = $langs->trans('CEHSold');
+			$this->labelStatusShort[self::STATUS_CONVERTED] = $langs->trans('CEHConverted');
+			$this->labelStatusShort[self::STATUS_REALIZED] = $langs->trans('CEHRealized');
 		}
 
 		$statusType = 'status'.$status;
@@ -958,9 +906,258 @@ class CliEnjoyHolidays extends CommonObject
 			$statusType = 'status6';
 		}
 
-namespace class;
+		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
+	}
 
-class clienjoyholidays
+	/**
+	 *	Load the info information in the object
+	 *
+	 *	@param  int		$id       Id of object
+	 *	@return	void
+	 */
+	public function info($id)
+	{
+		$sql = 'SELECT rowid, date_creation as datec, tms as datem,';
+		$sql .= ' fk_user_creat, fk_user_modif';
+		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as t';
+		$sql .= ' WHERE t.rowid = '.((int) $id);
+		$result = $this->db->query($sql);
+		if ($result) {
+			if ($this->db->num_rows($result)) {
+				$obj = $this->db->fetch_object($result);
+				$this->id = $obj->rowid;
+				if ($obj->fk_user_author) {
+					$cuser = new User($this->db);
+					$cuser->fetch($obj->fk_user_author);
+					$this->user_creation_id = $cuser;
+				}
+
+				if ($obj->fk_user_valid) {
+					$vuser = new User($this->db);
+					$vuser->fetch($obj->fk_user_valid);
+					$this->user_validation_id = $vuser;
+				}
+
+				if ($obj->fk_user_cloture) {
+					$cluser = new User($this->db);
+					$cluser->fetch($obj->fk_user_cloture);
+					$this->user_cloture = $cluser;
+				}
+
+				$this->date_creation     = $this->db->jdate($obj->datec);
+				$this->date_modification = $this->db->jdate($obj->datem);
+				$this->date_validation   = $this->db->jdate($obj->datev);
+			}
+
+			$this->db->free($result);
+		} else {
+			dol_print_error($this->db);
+		}
+	}
+
+	/**
+	 * Initialise object with example values
+	 * Id must be 0 if object instance is a specimen
+	 *
+	 * @return void
+	 */
+	public function initAsSpecimen()
+	{
+		// Set here init that are not commonf fields
+		// $this->property1 = ...
+		// $this->property2 = ...
+
+		$this->initAsSpecimenCommon();
+	}
+
+	/**
+	 * 	Create an array of lines
+	 *
+	 * 	@return array|int		array of lines if OK, <0 if KO
+	 */
+	public function getLinesArray()
+	{
+		$this->lines = array();
+
+		$objectline = new CliEnjoyHolidaysLine($this->db);
+		$result = $objectline->fetchAll('ASC', 'position', 0, 0, array('customsql'=>'fk_clienjoyholidays = '.$this->id));
+
+		if (is_numeric($result)) {
+			$this->error = $this->error;
+			$this->errors = $this->errors;
+			return $result;
+		} else {
+			$this->lines = $result;
+			return $this->lines;
+		}
+	}
+
+	/**
+	 *  Returns the reference to the following non used object depending on the active numbering module.
+	 *
+	 *  @return string      		Object free reference
+	 */
+	public function getNextNumRef()
+	{
+		global $langs, $conf;
+		$langs->load("clienjoyholidays@clienjoyholidays");
+
+		if (!getDolGlobalString('CLIENJOYHOLIDAYS_CLIENJOYHOLIDAYS_ADDON')) {
+			$conf->global->CLIENJOYHOLIDAYS_CLIENJOYHOLIDAYS_ADDON = 'mod_clienjoyholidays_standard';
+		}
+
+		if (getDolGlobalString('CLIENJOYHOLIDAYS_CLIENJOYHOLIDAYS_ADDON')) {
+			$mybool = false;
+
+			$file = getDolGlobalString('CLIENJOYHOLIDAYS_CLIENJOYHOLIDAYS_ADDON') . ".php";
+			$classname = $conf->global->CLIENJOYHOLIDAYS_CLIENJOYHOLIDAYS_ADDON;
+
+			// Include file with class
+			$dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
+			foreach ($dirmodels as $reldir) {
+				$dir = dol_buildpath($reldir."core/modules/clienjoyholidays/");
+
+				// Load file with numbering class (if found)
+				$mybool |= @include_once $dir.$file;
+			}
+
+			if ($mybool === false) {
+				dol_print_error('', "Failed to include file ".$file);
+				return '';
+			}
+
+			if (class_exists($classname)) {
+				$obj = new $classname();
+				$numref = $obj->getNextValue($this);
+
+				if ($numref != '' && $numref != '-1') {
+					return $numref;
+				} else {
+					$this->error = $obj->error;
+					//dol_print_error($this->db,get_class($this)."::getNextNumRef ".$obj->error);
+					return "";
+				}
+			} else {
+				print $langs->trans("Error")." ".$langs->trans("ClassNotFound").' '.$classname;
+				return "";
+			}
+		} else {
+			print $langs->trans("ErrorNumberingModuleNotSetup", $this->element);
+			return "";
+		}
+	}
+
+	/**
+	 *  Create a document onto disk according to template module.
+	 *
+	 *  @param	    string		$modele			Force template to use ('' to not force)
+	 *  @param		Translate	$outputlangs	objet lang a utiliser pour traduction
+	 *  @param      int			$hidedetails    Hide details of lines
+	 *  @param      int			$hidedesc       Hide description
+	 *  @param      int			$hideref        Hide ref
+	 *  @param      null|array  $moreparams     Array to provide more information
+	 *  @return     int         				0 if KO, 1 if OK
+	 */
+	public function generateDocument($modele, $outputlangs, $hidedetails = 0, $hidedesc = 0, $hideref = 0, $moreparams = null)
+	{
+		global $conf, $langs;
+
+		$result = 0;
+		$includedocgeneration = 0;
+
+		$langs->load("clienjoyholidays@clienjoyholidays");
+
+		if (!dol_strlen($modele)) {
+			$modele = 'standard_clienjoyholidays';
+
+			if (!empty($this->model_pdf)) {
+				$modele = $this->model_pdf;
+			} elseif (getDolGlobalString('CLIENJOYHOLIDAYS_ADDON_PDF')) {
+				$modele = $conf->global->CLIENJOYHOLIDAYS_ADDON_PDF;
+			}
+		}
+
+		$modelpath = "core/modules/clienjoyholidays/doc/";
+
+		if ($includedocgeneration && !empty($modele)) {
+			$result = $this->commonGenerateDocument($modelpath, $modele, $outputlangs, $hidedetails, $hidedesc, $hideref, $moreparams);
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Return HTML string to put an input field into a page
+	 * Code very similar with showInputField of extra fields
+	 *
+	 * @param  array   		$val	       Array of properties for field to show
+	 * @param  string  		$key           Key of attribute
+	 * @param  string  		$value         Preselected value to show (for date type it must be in timestamp format, for amount or price it must be a php numeric value)
+	 * @param  string  		$moreparam     To add more parameters on html input tag
+	 * @param  string  		$keysuffix     Prefix string to add into name and id of field (can be used to avoid duplicate names)
+	 * @param  string  		$keyprefix     Suffix string to add into name and id of field (can be used to avoid duplicate names)
+	 * @param  string|int	$morecss       Value for css to define style/length of field. May also be a numeric.
+	 * @return string
+	 */
+	public function showInputField($val, $key, $value, $moreparam = '', $keysuffix = '', $keyprefix = '', $morecss = 0, $nonewbutton = 0)
+	{
+		global $conf, $langs, $form, $action;
+
+		if($key == 'keywords') {
+			// return '<input  name="keywords" style="text-transform: uppercase" type="text" value="'.dol_escape_htmltag($value).'"/>';
+		}
+		if($key == 'group_title'){
+			$out = '<input type="text" class="flat '.$morecss.' maxwidthonsmartphone" list="datalist_'.$keyprefix.$key.$keysuffix.'" name="'.$keyprefix.$key.$keysuffix.'" id="'.$keyprefix.$key.$keysuffix.'" value="'.dol_escape_htmltag($value).'" '.($moreparam ? $moreparam : '').'>';
+
+
+
+			$sql = 'SELECT DISTINCT group_title FROM '.MAIN_DB_PREFIX.$this->table_element ;
+			$sql.= ' WHERE fk_project IN(0, '.intval($this->fk_project).')';
+			$sql.= ' AND CHAR_LENGTH(group_title) > 0';
+			$listobj = $this->db->getRows($sql);
+
+			$out.='<datalist id="datalist_'.$keyprefix.$key.$keysuffix.'" >';
+			if(!empty($listobj)){
+				foreach ($listobj as $obj){
+					$out.='<option value="'.dol_escape_htmltag($obj->group_title).'">';
+				}
+			}
+			$out.='</datalist>';
+		}
+		else
+		{
+			$out = parent::showInputField($val, $key, $value, $moreparam, $keysuffix, $keyprefix, $morecss, $nonewbutton);
+		}
+
+
+		return $out;
+	}
+}
+
+
+require_once DOL_DOCUMENT_ROOT.'/core/class/commonobjectline.class.php';
+
+/**
+ * Class CliEnjoyHolidaysLine. You can also remove this and generate a CRUD class for lines objects.
+ */
+class CliEnjoyHolidaysLine extends CommonObjectLine
 {
+	// To complete with content of an object CliEnjoyHolidaysLine
+	// We should have a field rowid, fk_clienjoyholidays and position
 
+	/**
+	 * @var int  Does object support extrafields ? 0=No, 1=Yes
+	 */
+	public $isextrafieldmanaged = 0;
+
+	/**
+	 * Constructor
+	 *
+	 * @param DoliDb $db Database handler
+	 */
+	public function __construct(DoliDB $db)
+	{
+		$this->db = $db;
+	}
 }
