@@ -336,7 +336,7 @@ class modClienjoyHolidays extends DolibarrModules
             'titre'=>'New',
             'mainmenu'=>'clienjoyholidaysmain',
             'leftmenu'=>'clienjoyholidays_clienjoyholidays_new',
-            'url'=>'/clienjoyholidays/clienjoyholidays_card.php',
+            'url'=>'/clienjoyholidays/clienjoyholidays_card.php?action=create',
             'langs'=>'clienjoyholidays@clienjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'position'=>1000+$r,
             'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.

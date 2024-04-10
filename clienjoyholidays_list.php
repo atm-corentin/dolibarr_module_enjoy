@@ -150,6 +150,7 @@ foreach ($object->fields as $key => $val) {
 	}
 }
 
+
 // List of fields to search into when doing a "search in all"
 $fieldstosearchall = array();
 foreach ($object->fields as $key => $val) {
@@ -173,13 +174,16 @@ foreach ($object->fields as $key => $val) {
 		);
 	}
 }
+
 // Extra fields
 include DOL_DOCUMENT_ROOT . '/core/tpl/extrafields_list_array_fields.tpl.php';
 
 $object->fields = dol_sort_array($object->fields, 'position');
 $arrayfields = dol_sort_array($arrayfields, 'position');
 
-
+$permissiontoread = $user->rights->clienjoyholidays->clienjoyholidays->read;
+$permissiontoadd = $user->rights->clienjoyholidays->clienjoyholidays->write;
+$permissiontodelete = $user->rights->clienjoyholidays->clienjoyholidays->delete;
 
 // Security check
 if (empty($conf->clienjoyholidays->enabled)) {
@@ -219,7 +223,7 @@ if (empty($reshook)) {
 	include DOL_DOCUMENT_ROOT . '/core/actions_changeselectedfields.inc.php';
 
 
-	if ($action == "confirm-add-propal" && $user->hasRight('propal', 'creer')) {
+	if ($action == "confirm-add-clienjoyholidays" && $user->hasRight('clienjoyholidays', 'creer')) {
 		$target_fk_propal = GETPOST('target_fk_propal', 'int');
 		$error = 0;
 		if (empty($target_fk_propal)) {
@@ -230,154 +234,16 @@ if (empty($reshook)) {
 			//TODO Apply to propal
 			$numberLineCreate = $numberLineError = 0;
 			include_once DOL_DOCUMENT_ROOT . '/comm/propal/class/propal.class.php';
-			$propal = new Propal($db);
-			$res = $propal->fetch($target_fk_propal);
-			if ($res > 0) {
-				if ($propal->status == Propal::STATUS_DRAFT) {
-					foreach ($toselect as $clienjoyholidaysId) {
-						$clienjoyholidays = new CliEnjoyHolidays($db);
-						$res = $clienjoyholidays->fetch($clienjoyholidaysId);
-						if ($res > 0) {
-							$product = new Product($db);
-							$resprod = $product->fetch($clienjoyholidays->fk_product);
-
-							// Ajout de la ligne à la propale avec extrafield : fk_clienjoyholidays pour la liaison avec le clienjoyholidays
-							$resAddline = $propal->addline(
-								$clienjoyholidays->commercial_text,
-								$product->price,
-								$clienjoyholidays->qty,
-								$product->tva_tx,
-								0,
-								0,
-								$clienjoyholidays->fk_product,
-								0.0,
-								'HT',
-								0.0,
-								0,
-								$product->type,
-								-1,
-								0,
-								0,
-								0,
-								$product->cost_price,
-								'',
-								'',
-								'',
-								array('options_fk_clienjoyholidays' => $clienjoyholidays->id)
-							);
-							if ($resAddline > 0) {
-								$numberLineCreate++;
-							} else {
-								$numberLineError++;
-								setEventMessage($langs->trans('CEHErrorAddCliEnjoyHolidaysLine') . ' : ' . $propal->errorsToString(), 'errors');
-								$error++;
-							}
-							$clienjoyholidays->add_object_linked('propal',$propal->id);
-						} else {
-							setEventMessage($langs->trans('CEHErrorFetchCliEnjoyHolidays') . ' : ' . $clienjoyholidays->errorsToString(), 'errors');
-							$error++;
-						}
-					}
-				} else {
-					setEventMessage('CEHErrorPropalNotDraft', 'errors');
-					$error++;
-				}
-			} else {
-				setEventMessage('CEHErrorFetchPropal' . ' : ' . $propal->errorsToString(), 'errors');
-				$error++;
-			}
+			$clienjoyholidays = new CliEnjoyHolidays($db);
+			$res = $clienjoyholidays->fetch();
 		}
 		if ($error == 0) {
 			setEventMessage($langs->trans('CEHSuccessAddCliEnjoyHolidaysLines', $numberLineCreate));
-			header("location: " . dol_buildpath('comm/propal/card.php', 1) . '?id=' . $propal->id);
+			header("location: " . dol_buildpath('comm/clienjoyholidays/card.php', 1) . '?id=' . $clienjoyholidays->id);
 			exit();
 		}
 	}
 
-
-	if ($action == "confirm-add-to-project") {
-		require_once DOL_DOCUMENT_ROOT . '/projet/class/project.class.php';
-		require_once DOL_DOCUMENT_ROOT . '/projet/class/task.class.php';
-
-		$target_fk_projet = GETPOST('target_fk_projet', 'int');
-		$error = 0;
-
-		$project = new Project($db);
-		$res = $project->fetch($target_fk_projet);
-
-		if ($res > 0) {
-			if ($project->status != Project::STATUS_CLOSED) {
-				foreach ($toselect as $clienjoyholidaysId) {
-					$clienjoyholidays = new CliEnjoyHolidays($db);
-					$resCliEnjoyHolidays = $clienjoyholidays->fetch($clienjoyholidaysId);
-
-					if ($resCliEnjoyHolidays > 0) {
-						$taskFromCliEnjoyHolidays = new Task($db);
-						$labelTaskFromCliEnjoyHolidays = new Product($db);
-						$resLabel = $labelTaskFromCliEnjoyHolidays->fetch($clienjoyholidays->fk_product);
-
-						//Permet de générer le prochain numéro de référence
-						$obj = !getDolGlobalString('PROJECT_TASK_ADDON') ? 'mod_task_simple' : $conf->global->PROJECT_TASK_ADDON;
-						if (getDolGlobalString('PROJECT_TASK_ADDON') && is_readable(DOL_DOCUMENT_ROOT . "/core/modules/project/task/" . getDolGlobalString('PROJECT_TASK_ADDON') . ".php")) {
-							require_once DOL_DOCUMENT_ROOT . "/core/modules/project/task/" . getDolGlobalString('PROJECT_TASK_ADDON') . '.php';
-							$modTask = new $obj;
-							$defaultref = $modTask->getNextValue(0, $taskFromCliEnjoyHolidays);
-						}
-
-						$taskFromCliEnjoyHolidays->ref = $defaultref;
-						$taskFromCliEnjoyHolidays->label = $labelTaskFromCliEnjoyHolidays->label;
-						$taskFromCliEnjoyHolidays->fk_project = $target_fk_projet;
-						$taskFromCliEnjoyHolidays->fk_task_parent = 0;
-
-						if(!empty($clienjoyholidays->commercial_text)) {
-							if(!empty($taskFromCliEnjoyHolidays->description)){
-								$taskFromCliEnjoyHolidays->description.= "\n";
-							}
-							$taskFromCliEnjoyHolidays->description .= '<h4>' . $langs->trans('CEHCommercialText') . '</h4>'."\n";
-							$taskFromCliEnjoyHolidays->description .= $clienjoyholidays->commercial_text;
-						}
-
-						if(!empty($clienjoyholidays->detailed_feature_specification)){
-							if(!empty($taskFromCliEnjoyHolidays->description)){
-								$taskFromCliEnjoyHolidays->description.= "\n";
-							}
-							$taskFromCliEnjoyHolidays->description.= '<h4>'.$langs->trans('DetailedFeatureSpecification').'</h4>'."\n";
-							$taskFromCliEnjoyHolidays->description.= $clienjoyholidays->detailed_feature_specification;
-						}
-
-						if(!empty($clienjoyholidays->tech_detail)){
-							if(!empty($taskFromCliEnjoyHolidays->description)){
-								$taskFromCliEnjoyHolidays->description.= "\n";
-							}
-							$taskFromCliEnjoyHolidays->description.= '<h4>'.$langs->trans('CEHTechDetail').'</h4>'."\n";
-							$taskFromCliEnjoyHolidays->description.= $clienjoyholidays->tech_detail;
-						}
-
-
-						//Ajout de l'extrafield clienjoyholidays sur tâche en cours de création
-						$taskFromCliEnjoyHolidays->array_options['options_fk_clienjoyholidays'] = $clienjoyholidays->id;
-
-						$taskFromCliEnjoyHolidays->planned_workload = ($conf->global->CLIENJOYHOLIDAYS_DEFAULT_MULTIPLICATOR_FOR_TASK * 3600) * $clienjoyholidays->qty;
-						$res = $taskFromCliEnjoyHolidays->create($user);
-
-						$clienjoyholidays->add_object_linked('project_task', $taskFromCliEnjoyHolidays->id);
-
-					} else {
-						setEventMessage($langs->trans('CEHErrorFetchCliEnjoyHolidays') . ' : ' . $clienjoyholidays->errorsToString(), 'errors');
-						$error++;
-					}
-				}
-			}
-		} else {
-			setEventMessage('CEHErrorFetchProject' . ' : ' . $project->errorsToString(), 'errors');
-			$error++;
-		}
-		if ($error == 0) {
-			setEventMessage($langs->trans('CEHSuccessAddProjectTasks', $numberLineCreate));
-			header("location: " . dol_buildpath('projet/tasks.php', 1) . '?id=' . $project->id);
-			exit();
-		}
-	}
 
 	// Purge search criteria
 	if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')) { // All tests are required to be compatible with all browsers
@@ -414,7 +280,7 @@ $now = dol_now();
 
 //$help_url="EN:Module_CliEnjoyHolidays|FR:Module_CliEnjoyHolidays_FR|ES:Módulo_CliEnjoyHolidays";
 $help_url = '';
-$title = $langs->trans('ListOf', $langs->transnoentitiesnoconv("CliEnjoyHolidays"));
+$title = $langs->trans('ListOf', $langs->transnoentitiesnoconv("CliEnjoyHolidayss"));
 $morejs = array();
 $morecss = array();
 
@@ -479,6 +345,7 @@ foreach ($search as $key => $val) {
 		}
 	}
 }
+
 if ($search_all) {
 	$sql .= natural_search(array_keys($fieldstosearchall), $search_all);
 }
@@ -528,6 +395,7 @@ if (is_numeric($nbtotalofrecords) && ($limit > $nbtotalofrecords || empty($limit
 		$sql .= $db->plimit($limit + 1, $offset);
 	}
 
+
 	$resql = $db->query($sql);
 	if (!$resql) {
 		dol_print_error($db);
@@ -573,6 +441,7 @@ if ($socid > 0 && $user->hasRight('societe', 'lire')) {
 		print dol_get_fiche_end();
 	}
 }
+
 
 // Example : Adding jquery code
 // print '<script type="text/javascript" language="javascript">
@@ -630,6 +499,9 @@ $arrayofmassactions = array(
 	//'builddoc'=>img_picto('', 'pdf', 'class="pictofixedwidth"').$langs->trans("PDFMerge"),
 	//'presend'=>img_picto('', 'email', 'class="pictofixedwidth"').$langs->trans("SendByMail"),
 );
+if ($permissiontodelete) {
+	$arrayofmassactions['predelete'] = img_picto('', 'delete', 'class="pictofixedwidth"') . ' ' . $langs->trans("Delete");
+}
 if (GETPOST('nomassaction', 'int') || in_array($massaction, array('presend', 'predelete'))) {
 	$arrayofmassactions = array();
 }
@@ -654,10 +526,9 @@ if(!empty($socid))
 	$addparams = '&fk_soc='.$socid;
 }
 $linktoadd = dol_buildpath('/clienjoyholidays/clienjoyholidays_card.php', 1) . '?action=create' . $addparams;
-$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', $linktoadd, '');
+$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', $linktoadd, '', $permissiontoadd);
 
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_clienjoyholidays_titre@clienjoyholidays', 0, $newcardbutton, '', $limit, 0, 0, 1);
-
 // Add code for pre mass action (confirmation or email presend form)
 $topicmail = "SendCliEnjoyHolidaysRef";
 $modelmail = "clienjoyholidays";
@@ -670,7 +541,7 @@ if ($massaction == 'preaddpropal') {
 	//$tmpPropalFieldVisibility = $objecttmp->fields['fk_propal']['visible'];
 	//$objecttmp->fields['fk_propal']['visible'] = 1;
 	include_once DOL_DOCUMENT_ROOT . '/comm/propal/class/propal.class.php';
-	$propal = new Propal($db);
+	$clienjoyholidays = new Propal($db);
 
 
 	$objectStaticForMassAction = new CliEnjoyHolidays($db);
@@ -784,6 +655,7 @@ foreach ($object->fields as $key => $val) {
 		print '</td>';
 	}
 }
+
 // Extra fields
 include DOL_DOCUMENT_ROOT . '/core/tpl/extrafields_list_search_input.tpl.php';
 
@@ -844,11 +716,13 @@ if (isset($extrafields->attributes[$object->table_element]['computed']) && is_ar
 $i = 0;
 $totalarray = array();
 $totalarray['nbfield'] = 0;
+
 while ($i < ($limit ? min($num, $limit) : $num)) {
 	$obj = $db->fetch_object($resql);
 	if (empty($obj)) {
 		break; // Should not happen
 	}
+
 
 	// Store properties in $object
 	$object->setVarsFromFetchObj($obj);
@@ -872,6 +746,7 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 		if (in_array($val['type'], array('double(24,8)', 'double(6,3)', 'integer', 'real', 'price')) && !in_array($key, array('rowid', 'status')) && empty($val['arrayofkeyval'])) {
 			$cssforfield .= ($cssforfield ? ' ' : '') . 'right';
 		}
+
 		//if (in_array($key, array('fk_soc', 'fk_user', 'fk_warehouse'))) $cssforfield = 'tdoverflowmax100';
 
 		if (!empty($arrayfields['t.' . $key]['checked'])) {
@@ -901,6 +776,7 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 			}
 		}
 	}
+
 	// Extra fields
 	include DOL_DOCUMENT_ROOT . '/core/tpl/extrafields_list_print_fields.tpl.php';
 	// Fields from hook
@@ -940,8 +816,8 @@ if ($num == 0) {
 	print '<tr><td colspan="' . $colspan . '" class="opacitymedium">' . $langs->trans("NoRecordFound") . '</td></tr>';
 }
 
-
 $db->free($resql);
+
 
 $parameters = array('arrayfields' => $arrayfields, 'sql' => $sql);
 $reshook = $hookmanager->executeHooks('printFieldListFooter', $parameters, $object); // Note that $action and $object may have been modified by hook

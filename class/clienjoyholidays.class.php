@@ -50,7 +50,7 @@ class CliEnjoyHolidays extends CommonObject
 	 * @var int  Does this object support multicompany module ?
 	 * 0=No test on entity, 1=Test with field entity, 'field@table'=Test with link by field@table
 	 */
-	public $ismultientitymanaged = 1;
+	public $ismultientitymanaged = 0;
 
 	/**
 	 * @var int  Does object support extrafields ? 0=No, 1=Yes
@@ -100,13 +100,13 @@ class CliEnjoyHolidays extends CommonObject
 	 * @var array  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
 	 */
 	public $fields = [
-		'ref' => array('type'=>'varchar(40)', 'label'=>'Ref', 'enabled'=>'1', 'position'=> 1, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
-		'label' => array('type' => 'varchar(160)', 'label' => 'Label', 'enabled' => '1', 'position' => 2, 'notnull' => 1, 'visible' => 1),
+		'ref' => array('type'=>'varchar(40)', 'label'=>'Ref', 'enabled'=>'1', 'position'=> 1, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
+		'label' => array('type' => 'varchar(160)', 'label' => 'libelle', 'enabled' => '1', 'position' => 2, 'notnull' => 1, 'visible' => 1),
 		'amount' => array('type' => 'price', 'label' => 'Price', 'enabled' => '1', 'notnull' => 0, 'position' => 3, 'visible' => 1),
 		'fk_destination_country' => array('type' => 'integer:Ccountry:/core/class/ccountry.class.php', 'label' => 'Pays de destination', 'enabled' => '1', 'notnull' => 1, 'position' => 4, 'visible' => 1, 'foreignkey' => 'c_country.rowid'),
 		'start_date' => array('type' => 'datetime', 'label' => 'Départ', 'enabled' => '1', 'notnull' => 0, 'position' => 5, 'visible' => 1),
 		'return_date' => array('type' => 'datetime', 'label' => 'Arrivée', 'enabled' => '1', 'notnull' => 0, 'position' => 6, 'visible' => 1),
-		'fk_travel_mode' => array('type' => 'sellist:c_transport_mode:label:rowid::(active:=:1)', 'label' => 'Mode de transport', 'enabled' => '1', 'notnull' => 0, 'position' => 7, 'visible' => 1, 'foreignkey' => 'c_transport_mode.rowid'),
+		'fk_travel_mod' => array('type' => 'sellist:c_transport_mode:label:rowid::(active:=:1)', 'label' => 'Mode de transport', 'enabled' => '1', 'notnull' => 0, 'position' => 7, 'visible' => 1, 'foreignkey' => 'c_transport_mode.rowid'),
 
 		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=> 1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>10, 'css'=>'left', 'comment'=>"Id"),
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
@@ -154,14 +154,6 @@ class CliEnjoyHolidays extends CommonObject
 		}
 		if (empty($conf->webhost->enabled)) {
 			$this->fields['module_name']['enabled'] = 0;
-		}
-
-
-		if ( version_compare(DOL_VERSION,'17.0.0') > 0 ) {
-
-			$this->fields['po_estimate']['type'] = 'integer:User:user/class/user.class.php:1:((employee:=:1) AND (t.statut:=:1))';
-			$this->fields['dev_estimate']['type'] = 'integer:User:user/class/user.class.php:1:((employee:=:1) AND (t.statut:=:1))';
-			$this->fields['fk_soc']['type'] = 'integer:Societe:societe/class/societe.class.php:1:(status:=:1)';
 		}
 
 
@@ -230,8 +222,10 @@ class CliEnjoyHolidays extends CommonObject
 
 		// Load source object
 		$result = $object->fetchCommon($fromid);
+
 		if ($result > 0 && !empty($object->table_element_line)) {
 			$object->fetchLines();
+
 		}
 
 		// get lines so they will be clone
@@ -712,8 +706,8 @@ class CliEnjoyHolidays extends CommonObject
 		global $conf, $langs, $hookmanager, $action;
 
 		if ($action == 'create') {
-			$result = 'Brouillon';
-			return $result;
+//			$result = 'Brouillon';
+//			return $result;
 		} else {
 			if (! empty($conf->dol_no_mouse_hover)) {
 				$notooltip = 1; // Force disable tooltips
@@ -726,7 +720,7 @@ class CliEnjoyHolidays extends CommonObject
 				$label .= ' ' . $this->getLibStatut(5);
 			}
 			$label .= '<br>';
-			$label .= '<b>' . $langs->trans('Ref') . ':</b> ' . $this->ref;
+			$label .= '<b>' . $langs->trans('abc') . ':</b> ' . $this->ref;
 
 			if (! empty($this->commercial_text)) {
 				$label .= '<br>';
@@ -871,6 +865,8 @@ class CliEnjoyHolidays extends CommonObject
 	 *	@param  int		$id       Id of object
 	 *	@return	void
 	 */
+
+
 	public function info($id)
 	{
 		$sql = 'SELECT rowid, date_creation as datec, tms as datem,';
@@ -937,7 +933,7 @@ class CliEnjoyHolidays extends CommonObject
 
 		$objectline = new CliEnjoyHolidaysLine($this->db);
 		$result = $objectline->fetchAll('ASC', 'position', 0, 0, array('customsql'=>'fk_clienjoyholidays = '.$this->id));
-
+		var_dump($result);
 		if (is_numeric($result)) {
 			$this->error = $this->error;
 			$this->errors = $this->errors;

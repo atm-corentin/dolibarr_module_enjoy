@@ -82,8 +82,6 @@ require_once DOL_DOCUMENT_ROOT . '/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT."/ticket/class/ticket.class.php";
-require_once DOL_DOCUMENT_ROOT."/projet/class/task.class.php";
-require_once DOL_DOCUMENT_ROOT."/product/class/product.class.php";
 dol_include_once('/clienjoyholidays/class/clienjoyholidays.class.php');
 dol_include_once('/clienjoyholidays/lib/clienjoyholidays_clienjoyholidays.lib.php');
 
@@ -105,9 +103,15 @@ $backtopageforcancel = GETPOST('backtopageforcancel', 'alpha');
 
 // Initialize technical objects
 $object = new CliEnjoyHolidays($db);
+$extrafields = new ExtraFields($db);
 $diroutputmassaction = $conf->clienjoyholidays->dir_output . '/temp/massgeneration/' . $user->id;
-$hookmanager->initHooks(array('clienjoyholidayscard', 'globalcard')); // Note that conf->hooks_modules contains array
+$hookmanager->initHooks(array('chiffragecard', 'globalcard')); // Note that conf->hooks_modules contains array
 
+
+// Fetch optionals attributes and labels
+$extrafields->fetch_name_optionals_label($object->table_element);
+
+$search_array_options = $extrafields->getOptionalsFromPost($object->table_element, '', 'search_');
 
 // Initialize array of search criterias
 $search_all = GETPOST("search_all", 'alpha');
@@ -167,7 +171,6 @@ if (empty($reshook)) {
 		}
 	}
 
-	$triggermodname = 'CLIENJOYHOLIDAYS_CLIENJOYHOLIDAYS_MODIFY'; // Name of trigger action code to execute when we modify record
 
 	// Action clone object and redirect to edit mode
 	if ($action == 'confirm_clone' && $confirm == 'yes' && ! empty($permissiontoadd)) {
@@ -189,171 +192,22 @@ if (empty($reshook)) {
 		}
 	}
 
-	// Action Création d'une clienjoyholidays depuis un clienjoyholidays
-	if ($action == 'create_clienjoyholidays_from_clienjoyholidays') {
-		if ($user->hasRight('clienjoyholidays', 'creer')) {
-			$clienjoyholidaysFromCliEnjoyHolidays = new CliEnjoyHolidays($db);
-			$clienjoyholidaysFromCliEnjoyHolidays->date = dol_now();
-			$clienjoyholidaysFromCliEnjoyHolidays->datep = $propalFromCliEnjoyHolidays->date;
-			$propalFromCliEnjoyHolidays->date_validation = 90;
-			$resCreate = $propalFromCliEnjoyHolidays->create($user);
-			if($resCreate > 0){
-				// on passe le clienjoyholidays en valide
-				$object->setStatut($object::STATUS_VALIDATED);
-				$product = new Product($db);
-				$resprod = $product->fetch($object->fk_product);
 
-				// Ajout de la ligne à la clienjoyholidays avec extrafield : fk_clienjoyholidays pour la liaison avec le clienjoyholidays
-				$resAddline = $propalFromCliEnjoyHolidays->addline(
-					$object->commercial_text,
-					$product->price,
-					$object->qty,
-					$product->tva_tx,
-					0,
-					0,
-					$object->fk_product,
-					0.0,
-					'HT',
-					0.0,
-					0,
-					$product->type,
-					-1,
-					0,
-					0,
-					0,
-					$product->cost_price,
-					'',
-					'',
-					'',
-					array('options_fk_clienjoyholidays' => $object->id)
-				);
-				$object->add_object_linked('propal',$propalFromCliEnjoyHolidays->id);
-				$backtopage = dol_buildpath('/comm/propal/card.php', 1) . '?id=' . $propalFromCliEnjoyHolidays->id;
-				header("Location: " . $backtopage);
-				exit;
-			}
-			else{
-				setEventMessage($langs->trans('ErrorOnCreatePropal') . ' : '. $propalFromCliEnjoyHolidays->errorsToString(), 'errors');
-			}
-		}
-		else{
-			setEventMessage('NotEnoughRights', 'errors');
-		}
-	}
-
-	// Action Création d'une tâche depuis un clienjoyholidays
-	if ($action == 'confirm_create_task') {
-		$taskFromCliEnjoyHolidays = new Task($db);
-		$taskFromCliEnjoyHolidays->fk_project = GETPOST('fk_projet', 'int');
-		$labelTaskFromCliEnjoyHolidays = new Product($db);
-		$resLabel = $labelTaskFromCliEnjoyHolidays->fetch($object->fk_product);
-
-		if($resLabel > 0){
-			$projectFromCliEnjoyHolidays = new Project($db);
-			$resProjectFromCliEnjoyHolidays = $projectFromCliEnjoyHolidays->fetch($taskFromCliEnjoyHolidays->fk_project);
-			if ($resLabel > 0){
-				if ($projectFromCliEnjoyHolidays->statut == Project::STATUS_CLOSED) {
-					setEventMessage($langs->trans("CEHErrorProjectClosed"), 'errors');
-				} else {
-					//Permet de générer le prochain numéro de référence
-					$obj = !getDolGlobalString('PROJECT_TASK_ADDON') ? 'mod_task_simple' : $conf->global->PROJECT_TASK_ADDON;
-					if (getDolGlobalString('PROJECT_TASK_ADDON') && is_readable(DOL_DOCUMENT_ROOT . "/core/modules/project/task/" . getDolGlobalString('PROJECT_TASK_ADDON') . ".php")) {
-						require_once DOL_DOCUMENT_ROOT . "/core/modules/project/task/" . getDolGlobalString('PROJECT_TASK_ADDON') . '.php';
-						$modTask = new $obj;
-						$defaultref = $modTask->getNextValue(0, $taskFromCliEnjoyHolidays);
-					}
-
-					$taskFromCliEnjoyHolidays->ref = $defaultref;
-					$taskFromCliEnjoyHolidays->label = $labelTaskFromCliEnjoyHolidays->label;
-					$taskFromCliEnjoyHolidays->fk_task_parent = 0;
-
-					if(!empty($object->commercial_text)) {
-						if(!empty($taskFromCliEnjoyHolidays->description)){
-							$taskFromCliEnjoyHolidays->description.= "\n";
-						}
-						$taskFromCliEnjoyHolidays->description .= '<h4>' . $langs->trans('CEHCommercialText') . '</h4>'."\n";
-						$taskFromCliEnjoyHolidays->description .= $object->commercial_text;
-					}
-
-					if(!empty($object->detailed_feature_specification)){
-						if(!empty($taskFromCliEnjoyHolidays->description)){
-							$taskFromCliEnjoyHolidays->description.= "\n";
-						}
-						$taskFromCliEnjoyHolidays->description.= '<h4>'.$langs->trans('DetailedFeatureSpecification').'</h4>'."\n";
-						$taskFromCliEnjoyHolidays->description.= $object->detailed_feature_specification;
-					}
-
-					if(!empty($object->tech_detail)){
-						if(!empty($taskFromCliEnjoyHolidays->description)){
-							$taskFromCliEnjoyHolidays->description.= "\n";
-						}
-						$taskFromCliEnjoyHolidays->description.= '<h4>'.$langs->trans('CEHTechDetail').'</h4>'."\n";
-						$taskFromCliEnjoyHolidays->description.= $object->tech_detail;
-					}
-
-
-					//Ajout de l'extrafield clienjoyholidays sur tâche en cours de création
-					$taskFromCliEnjoyHolidays->array_options['options_fk_clienjoyholidays'] = $object->id;
-
-					$taskFromCliEnjoyHolidays->planned_workload = ($conf->global->CLIENJOYHOLIDAYS_DEFAULT_MULTIPLICATOR_FOR_TASK * 3600) * $object->qty;
-					if($taskFromCliEnjoyHolidays->fk_project != -1){
-						$res = $taskFromCliEnjoyHolidays->create($user);
-						if ($res > 0) {
-
-							$object->add_object_linked('project_task', $taskFromCliEnjoyHolidays->id);
-
-							$object->setStatut($object::STATUS_CONVERTED);
-							$backtopage = dol_buildpath('/projet/tasks/task.php', 1) . '?id=' . $taskFromCliEnjoyHolidays->id;
-							header("Location: " . $backtopage);
-							exit;
-						} else {
-							setEventMessage($langs->trans("CEHErrorCreateTask"), 'errors');
-						}
-					}else{
-						setEventMessage($langs->trans("CEHErrorNoProject"), 'errors');
-					}
-				}
-			}else{
-				setEventMessage($langs->trans("CEHErrorFetchProject"), 'errors');
-			}
-		}else{
-			setEventMessage($langs->trans("CEHErrorFetchLabelProduct"), 'errors');
-		}
-	}
-
-
-	if ($action == 'create') {
-		$object->fields['po_estimate']['default'] = $user->id;
-		$object->fields['fk_product']['default'] = $conf->global->CLIENJOYHOLIDAYS_DEFAULT_PRODUCT;
-		$object->fields['tech_detail']['visible'] = 5;
-	}
 	if($action == 'add' && $addCancel){
 		header("Location: " . $backtopage); // Open record of new object
 		exit;
 	}
 
 	if ($action == 'add') {
-		$object->fields['tech_detail']['visible'] = 5;
 		if($fk_ticket > 0){
 			$object->fk_ticket = $fk_ticket;
 			$backtopage = 'clienjoyholidays_card.php?id=__ID__';
 		}
 	}
-	if($action == 'set_ticket'){
-		$object->add_object_linked('ticket',$fk_ticket);
-		$url = $backtopage;
-		if(empty($backtopage)){
-			$url = dol_buildpath('/clienjoyholidays/clienjoyholidays_card.php', 1) . '?id='. $object->id;
-		}
-		header("Location: " . $url); // Open record of new object
-		exit;
-	}
+
 	if ($action == 'add' && $addNew) {
 		$backtopage = dol_buildpath('/clienjoyholidays/clienjoyholidays_card.php', 1) . '?action=create';
-		$backtopage .= '&po_estimated=' . GETPOST('po_estimated');
-		$backtopage .= '&fk_soc=' . GETPOST('fk_soc');
-		$backtopage .= '&fk_project=' . GETPOST('fk_project');
-		$backtopage .= '&fk_product=' . GETPOST('fk_product');
+
 	}
 
 	$saveAddNew = GETPOSTISSET('saveaddnew');
@@ -369,19 +223,6 @@ if (empty($reshook)) {
 		$textDev = GETPOST('tech_detail');
 		$textCommercial = GETPOST('commercial_text');
 
-		if ($qty > 0 && $dev == -1) {
-			setEventMessage($langs->trans("CEHErrorDevEstimate"), 'errors');
-			$action = 'edit';
-		}
-
-		if ($qty > 0 && empty($textDev)) {
-			setEventMessage($langs->trans("CEHErrorTechDetail"), 'errors');
-			$action = 'edit';
-		}
-		if ($qty < 0 && $qty != '') {
-			setEventMessage($langs->trans("CEHErrorQty"), 'errors');
-			$action = 'edit';
-		}
 	}
 	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	include DOL_DOCUMENT_ROOT . '/core/actions_addupdatedelete.inc.php';
@@ -404,30 +245,10 @@ if (empty($reshook)) {
 	// Action to move up and down lines of object
 	//include DOL_DOCUMENT_ROOT.'/core/actions_lineupdown.inc.php';
 
-	// Action to build doc
-	include DOL_DOCUMENT_ROOT . '/core/actions_builddoc.inc.php';
-
-	if ($action == 'set_thirdparty' && $permissiontoadd) {
-		$object->setValueFrom('fk_soc', GETPOST('fk_soc', 'int'), '', '', 'date', '', $user, $triggermodname);
-	}
-	if ($action == 'classin' && $permissiontoadd) {
-		$object->setProject(GETPOST('projectid', 'int'));
-	}
-
-	// Actions to send emails
-	$triggersendname = 'CLIENJOYHOLIDAYS_CLIENJOYHOLIDAYS_SENTBYMAIL';
-	$autocopy = 'MAIN_MAIL_AUTOCOPY_CLIENJOYHOLIDAYS_TO';
-	$trackid = 'clienjoyholidays' . $object->id;
-	include DOL_DOCUMENT_ROOT . '/core/actions_sendmails.inc.php';
-}
 
 $saveAddNew = GETPOSTISSET('saveaddnew');
 if ($redirectBackToPage == true && $textCommercial == ! null) {
 	$backtopage = dol_buildpath('/clienjoyholidays/clienjoyholidays_card.php', 1) . '?action=create';
-	$backtopage .= '&po_estimated=' . GETPOST('po_estimated');
-	$backtopage .= '&fk_soc=' . GETPOST('fk_soc');
-	$backtopage .= '&fk_project=' . GETPOST('fk_project');
-	$backtopage .= '&fk_product=' . GETPOST('fk_product');
 	header("Location: " . $backtopage); // Open record of new object
 	exit;
 }
@@ -446,8 +267,7 @@ $help_url = '';
 llxHeader('', $title, $help_url,'','','','',array("clienjoyholidays/css/clienjoyholidays.css"));
 
 // fields fk_soc & fk_project in view
-$object->fields['fk_soc']['visible'] = 0;
-$object->fields['fk_project']['visible'] = 0;
+
 
 // Example : Adding jquery code
 // print '<script type="text/javascript" language="javascript">
@@ -466,8 +286,7 @@ $object->fields['fk_project']['visible'] = 0;
 
 // Part to create
 if ($action == 'create') {
-	$object->fields['fk_soc']['visible'] = 1;
-	$object->fields['fk_project']['visible'] = 1;
+
 	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("CliEnjoyHolidays")), '', 'object_' . $object->picto);
 
 	print '<form method="POST" action="' . $_SERVER["PHP_SELF"] . '">';
@@ -493,7 +312,6 @@ if ($action == 'create') {
 	// Ref
 //    print '<tr><td class="titlefieldcreate fieldrequired">'.$langs->trans('Ref').'</td><td>'.$langs->trans("Draft").'</td></tr>';
 //    $object->fields['ref']['visible'] = 0;
-	$object->ref = $langs->trans("Draft");
 
 	// Common attributes
 	include DOL_DOCUMENT_ROOT . '/core/tpl/commonfields_add.tpl.php';
@@ -518,8 +336,7 @@ if ($action == 'create') {
 
 // Part to edit record
 if (($id || $ref) && $action == 'edit') {
-	$object->fields['fk_soc']['visible'] = 1;
-	$object->fields['fk_project']['visible'] = 1;
+
 	print load_fiche_titre($langs->trans("CliEnjoyHolidays"), '', 'object_' . $object->picto);
 
 	print '<form method="POST" action="' . $_SERVER["PHP_SELF"] . '">';
@@ -531,17 +348,6 @@ if (($id || $ref) && $action == 'edit') {
 	}
 	if ($backtopageforcancel) {
 		print '<input type="hidden" name="backtopageforcancel" value="' . $backtopageforcancel . '">';
-	}
-
-	// Make qty field visible if status is validated or estimated
-	if ($object->status == $object::STATUS_VALIDATED || $object->status == $object::STATUS_ESTIMATED) {
-		$object->fields['qty']['visible'] = 1;
-		$object->fields['dev_estimate']['visible'] = 1;
-		$object->fields['tech_detail']['visible'] = 1;
-	} else {
-		$object->fields['qty']['visible'] = 5;
-		$object->fields['dev_estimate']['visible'] = 5;
-		$object->fields['tech_detail']['visible'] = 5;
 	}
 
 	print dol_get_fiche_head();
@@ -665,7 +471,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 				$morehtmlref .= '<input type="submit" class="button valignmiddle" value="' . $langs->trans("Modify") . '">';
 				$morehtmlref .= '</form>';
 			} else {
-				$morehtmlref .= $form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->fk_soc, $object->fk_project, 'none', 0, 0, 0, 1);
+				$morehtmlref .= $form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->fk_destination_country, $object->fk_project, 'none', 0, 0, 0, 1);
 			}
 		} else {
 			if (! empty($object->fk_project)) {
@@ -785,18 +591,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 					print dolGetButtonAction($langs->trans("ErrorAddAtLeastOneLineFirst"), $langs->trans("Validate"), 'default', '#', '', 0);
 				}
 			}
-			// Bouton Créer Devis (action = create_propal_from_clienjoyholidays)
-			if ($object->status == $object::STATUS_ESTIMATED && !empty($object->fk_soc)) {
-				print dolGetButtonAction($langs->trans('CEHCreatePropal'), '', 'default', $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&socid=' . $object->fk_soc . '&action=create_propal_from_clienjoyholidays&token=' . newToken(), '', $user->hasRight('propal', 'creer'));
-			}
-
-			// Bouton Créer Tâche (action = create_task_from_clienjoyholidays)
-			if ($object->status == $object::STATUS_ESTIMATED) {
-				print dolGetButtonAction($langs->trans('CEHCreateTask'), '', 'default', $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&fk_project=' . $object->fk_project . '&action=create_task_from_clienjoyholidays&token=' . newToken(), '', $permissiontoadd);
-			}
 
 			// Clone
-			print dolGetButtonAction($langs->trans('ToClone'), '', 'default', $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&socid=' . $object->fk_soc . '&action=clone&token=' . newToken(), '', $permissiontoadd);
+			print dolGetButtonAction($langs->trans('ToClone'), '', 'default', $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=clone&token=' . newToken(), '', $permissiontoadd);
 
 			/*
 			if ($permissiontoadd) {
@@ -821,27 +618,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '</div>' . "\n";
 	}
 
-	// Select mail models is same action as presend
-	if (GETPOST('modelselected')) {
-		$action = 'presend';
-	}
 
-	if ($action != 'presend') {
-		print '<div class="fichecenter"><div class="fichehalfleft">';
-		print '<a name="builddoc"></a>'; // ancre
 
-		$includedocgeneration = 0;
-
-		// Documents
-		if ($includedocgeneration) {
-			$objref = dol_sanitizeFileName($object->ref);
-			$relativepath = $objref . '/' . $objref . '.pdf';
-			$filedir = $conf->clienjoyholidays->dir_output . '/' . $object->element . '/' . $objref;
-			$urlsource = $_SERVER["PHP_SELF"] . "?id=" . $object->id;
-			$genallowed = $user->rights->clienjoyholidays->clienjoyholidays->read; // If you can read, you can build the PDF to read content
-			$delallowed = $user->rights->clienjoyholidays->clienjoyholidays->write; // If you can create/edit, you can remove a file on card
-			print $formfile->showdocuments('clienjoyholidays:CliEnjoyHolidays', $object->element . '/' . $objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
-		}
 
 		// Show links to link elements
 		$somethingshown = $form->showLinkedObjectBlock($object);
@@ -862,13 +640,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '</div></div></div>';
 	}
 
-	//Select mail models is same action as presend
-	if (GETPOST('modelselected')) {
-		$action = 'presend';
-	}
+
 
 	// Presend form
-	$modelmail = 'clienjoyholidays';
+
 	$defaulttopic = 'InformationMessage';
 	$diroutput = $conf->clienjoyholidays->dir_output;
 	$trackid = 'clienjoyholidays' . $object->id;
