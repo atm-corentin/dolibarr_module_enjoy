@@ -22,26 +22,6 @@ ModuleCliEnjoyHolidaysName = CliEnjoyHolidays
 # Module description 'ModuleCliEnjoyHolidaysDesc'
 ModuleCliEnjoyHolidaysDesc = CliEnjoyHolidays description
 
-#
-# Admin page
-#
-CliEnjoyHolidaysSetup = CliEnjoyHolidays setup
-Settings = Settings
-CliEnjoyHolidaysSetupPage = CliEnjoyHolidays setup page
-CLIENJOYHOLIDAYS_DEFAULT_PRODUCT = Default product
-
-
-#
-# About page
-#
-About = About
-CliEnjoyHolidaysAbout = About CliEnjoyHolidays
-CliEnjoyHolidaysAboutPage = CliEnjoyHolidays about page
-
-#
-# Sample page
-#
-MyPageName = My page name
 
 #
 # Lang page
