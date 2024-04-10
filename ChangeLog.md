@@ -6,5 +6,4 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 
 
-- NEW :  création du corp du module CliEnjoyHolidays 
-
+-  NEW :  initialisation du module CliEnjoyHolidays - *2024-04-08* - 1.0

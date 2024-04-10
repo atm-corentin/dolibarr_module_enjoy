@@ -1,9 +1,10 @@
 
 # MODULE CLIENJOYHOLIDAYS
 
-Ce module vous permet de créer des ??? que vous pourrez réutiliser ultérieurement comme référence.
+Ce module vous permet de gérer des formules de voyage
 
-## Configuration et gestion
 
-Lors de l'activation du module de nouveaux menus gauche apparaissent dans la rubrique "Projet",
-ils vous permettent de créer et de gérer les ??? disponibles.
+
+
+
+

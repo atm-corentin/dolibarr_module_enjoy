@@ -44,7 +44,6 @@ CliEnjoyHolidaysAboutPage = CliEnjoyHolidays about page
 MyPageName = My page name
 
 #
-# Sample widget
+# Lang page
 #
-MyWidget = My widget
-MyWidgetDescription = My widget description
+CEH_description = The clienjoyholidays module allows you to create, modify, delete, clone and list travel packages
