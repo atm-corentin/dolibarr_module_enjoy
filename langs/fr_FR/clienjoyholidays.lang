@@ -1,1 +1,3 @@
 CEH = Le module clienjoyholidays permet d'accéder a ses informations par la suite
+CEHValidated = L'objet clienjoyholidays a un status validé
+Draft = L'objet clienjoyholidays a un status brouillon

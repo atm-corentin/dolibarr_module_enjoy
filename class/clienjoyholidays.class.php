@@ -537,7 +537,7 @@ class CliEnjoyHolidays extends CommonObject
 			return 0;
 		}
 
-		if ($this->status == self::STATUS_ESTIMATED) {
+		if ($this->status == self::STATUS_DRAFT) {
 			return 0;
 		}
 
@@ -566,8 +566,11 @@ class CliEnjoyHolidays extends CommonObject
 			$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element;
 			$sql .= " SET ref = '".$this->db->escape($num)."',";
 			$sql .= " status = ".self::STATUS_VALIDATED;
-			if (!empty($this->fields['date_validation'])) {
-				$sql .= ", date_validation = '".$this->db->idate($now)."'";
+			if (!empty($this->fields['fk_destination_country'])) {
+				$sql .= ", fk_destination_country = ".((integer) $this->fk_destination_country);
+			}
+			if (!empty($this->fields['label'])) {
+				$sql .= ", label = ".((integer) $this->label);
 			}
 			if (!empty($this->fields['fk_user_valid'])) {
 				$sql .= ", fk_user_valid = ".((int) $user->id);
@@ -582,14 +585,6 @@ class CliEnjoyHolidays extends CommonObject
 				$error++;
 			}
 
-			if (!$error && !$notrigger) {
-				// Call trigger
-				$result = $this->call_trigger('CLIENJOYHOLIDAYS_VALIDATE', $user);
-				if ($result < 0) {
-					$error++;
-				}
-				// End call triggers
-			}
 		}
 
 		if (!$error) {
@@ -676,22 +671,7 @@ class CliEnjoyHolidays extends CommonObject
 	 *  @param	int		$notrigger		1=Does not execute triggers, 0=Execute triggers
 	 *	@return	int						<0 if KO, 0=Nothing done, >0 if OK
 	 */
-	public function cancel($user, $notrigger = 0)
-	{
-		// Protection
-		if ($this->status != self::STATUS_VALIDATED) {
-			return 0;
-		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->clienjoyholidays->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->clienjoyholidays->clienjoyholidays_advance->validate))))
-		 {
-		 $this->error='Permission denied';
-		 return -1;
-		 }*/
-
-		return $this->setStatusCommon($user, self::STATUS_CANCELED, $notrigger, 'CLIENJOYHOLIDAYS_CANCEL');
-	}
 
 	/**
 	 *	Set back to validated status
@@ -875,36 +855,12 @@ class CliEnjoyHolidays extends CommonObject
 			//$langs->load("clienjoyholidays@clienjoyholidays");
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('Draft');
 			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('CEHValidated');
-			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('Disabled');
-			$this->labelStatus[self::STATUS_ESTIMATED] = $langs->trans('CEHEstimated');
-			$this->labelStatus[self::STATUS_PROPOSED] = $langs->trans('CEHProposed');
-			$this->labelStatus[self::STATUS_SOLD] = $langs->trans('CEHSold');
-			$this->labelStatus[self::STATUS_CONVERTED] = $langs->trans('CEHConverted');
-			$this->labelStatus[self::STATUS_REALIZED] = $langs->trans('CEHRealized');
 			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('Draft');
 			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('CEHValidated');
-			$this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('Disabled');
-			$this->labelStatusShort[self::STATUS_ESTIMATED] = $langs->trans('CEHEstimated');
-			$this->labelStatusShort[self::STATUS_PROPOSED] = $langs->trans('CEHProposed');
-			$this->labelStatusShort[self::STATUS_SOLD] = $langs->trans('CEHSold');
-			$this->labelStatusShort[self::STATUS_CONVERTED] = $langs->trans('CEHConverted');
-			$this->labelStatusShort[self::STATUS_REALIZED] = $langs->trans('CEHRealized');
 		}
 
 		$statusType = 'status'.$status;
-		//if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
-		if ($status == self::STATUS_CANCELED) {
-			$statusType = 'status6';
-		}
-		if ($status == self::STATUS_ESTIMATED) {
-			$statusType = 'status7';
-		}
-		if ($status == self::STATUS_REALIZED) {
-			$statusType = 'status4';
-		}
-		if ($status == self::STATUS_CONVERTED) {
-			$statusType = 'status6';
-		}
+		if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
 
 		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
 	}
