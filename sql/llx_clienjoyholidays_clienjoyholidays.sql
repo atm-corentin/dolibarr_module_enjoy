@@ -18,7 +18,7 @@ CREATE TABLE llx_clienjoyholidays_clienjoyholidays
 (
 	-- BEGIN MODULEBUILDER FIELDS
 
-    ref varchar(40) DEFAULT '(PROV)' NOT NULL,
+    ref varchar(40) UNIQUE DEFAULT '(PROV)' NOT NULL,
     label varchar(160) NOT NULL ,
     amount double,
     fk_destination_country integer NOT NULL ,

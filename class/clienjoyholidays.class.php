@@ -23,7 +23,7 @@
  */
 
 // Put here all includes required by your class file
-require_once DOL_DOCUMENT_ROOT.'/core/class/commonobject.class.php';
+require_once DOL_DOCUMENT_ROOT . '/core/class/commonobject.class.php';
 
 
 /**
@@ -67,8 +67,6 @@ class CliEnjoyHolidays extends CommonObject
 	const STATUS_VALIDATED = 1;
 
 
-
-
 	/**
 	 *  'type' field format ('integer', 'integer:ObjectClass:PathToClass[:AddCreateButtonOrNot[:Filter]]', 'sellist:TableName:LabelFieldName[:KeyFieldName[:KeyFieldParent[:Filter]]]', 'varchar(x)', 'double(24,8)', 'real', 'price', 'text', 'text:none', 'html', 'date', 'datetime', 'timestamp', 'duration', 'mail', 'phone', 'url', 'password')
 	 *         Note: Filter can be a string like "(t.ref:like:'SO-%') or (t.date_creation:<:'20160101') or (t.nature:is:NULL)"
@@ -100,7 +98,7 @@ class CliEnjoyHolidays extends CommonObject
 	 * @var array  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
 	 */
 	public $fields = [
-		'ref' => array('type'=>'varchar(40)', 'label'=>'Ref', 'enabled'=>'1', 'position'=> 1, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
+		'ref' => array('type' => 'varchar(40)', 'label' => 'Ref', 'enabled' => '1', 'position' => 1, 'notnull' => 1, 'visible' => 1, 'index' => 1, 'searchall' => 1, 'showoncombobox' => '1', 'comment' => "Reference of object"),
 		'label' => array('type' => 'varchar(160)', 'label' => 'libelle', 'enabled' => '1', 'position' => 2, 'notnull' => 1, 'visible' => 1),
 		'amount' => array('type' => 'price', 'label' => 'Price', 'enabled' => '1', 'notnull' => 0, 'position' => 3, 'visible' => 1),
 		'fk_destination_country' => array('type' => 'integer:Ccountry:/core/class/ccountry.class.php', 'label' => 'Pays de destination', 'enabled' => '1', 'notnull' => 1, 'position' => 4, 'visible' => 1, 'foreignkey' => 'c_country.rowid'),
@@ -108,13 +106,13 @@ class CliEnjoyHolidays extends CommonObject
 		'return_date' => array('type' => 'datetime', 'label' => 'Arrivée', 'enabled' => '1', 'notnull' => 0, 'position' => 6, 'visible' => 1),
 		'fk_travel_mod' => array('type' => 'sellist:c_transport_mode:label:rowid::(active:=:1)', 'label' => 'Mode de transport', 'enabled' => '1', 'notnull' => 0, 'position' => 7, 'visible' => 1, 'foreignkey' => 'c_transport_mode.rowid'),
 
-		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=> 1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>10, 'css'=>'left', 'comment'=>"Id"),
-		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
-		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>30, 'notnull'=>-1, 'visible'=>-2,),
-		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>40, 'notnull'=>0, 'visible'=>-2,),
-		'date_creation' => array('type'=>'date', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>50, 'notnull'=>1, 'visible'=>-2,),
-		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>60, 'notnull'=>0, 'visible'=>-2,),
-		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'notnull'=>1, 'position'=>70, 'visible'=>5, 'default'=>0,'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;'),),
+		'rowid' => array('type' => 'integer', 'label' => 'TechnicalID', 'enabled' => '1', 'position' => 1, 'notnull' => 1, 'visible' => 0, 'noteditable' => '1', 'index' => 10, 'css' => 'left', 'comment' => "Id"),
+		'fk_user_creat' => array('type' => 'integer:User:user/class/user.class.php', 'label' => 'UserAuthor', 'enabled' => '1', 'position' => 20, 'notnull' => 1, 'visible' => -2, 'foreignkey' => 'user.rowid',),
+		'fk_user_modif' => array('type' => 'integer:User:user/class/user.class.php', 'label' => 'UserModif', 'enabled' => '1', 'position' => 30, 'notnull' => -1, 'visible' => -2,),
+		'tms' => array('type' => 'timestamp', 'label' => 'DateModification', 'enabled' => '1', 'position' => 40, 'notnull' => 0, 'visible' => -2,),
+		'date_creation' => array('type' => 'date', 'label' => 'DateCreation', 'enabled' => '1', 'position' => 50, 'notnull' => 1, 'visible' => -2,),
+		'import_key' => array('type' => 'varchar(14)', 'label' => 'ImportId', 'enabled' => '1', 'position' => 60, 'notnull' => 0, 'visible' => -2,),
+		'status' => array('type' => 'smallint', 'label' => 'Status', 'enabled' => '1', 'notnull' => 1, 'position' => 70, 'visible' => 5, 'default' => 0, 'index' => 1, 'arrayofkeyval' => array('0' => 'Brouillon', '1' => 'Valid&eacute;'),),
 	];
 
 	public $ref;
@@ -185,16 +183,25 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 * Create object into database
 	 *
-	 * @param  User $user      User that creates
-	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
+	 * @param User $user User that creates
+	 * @param bool $notrigger false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, Id of created object if OK
 	 */
 	public function create(User $user, $notrigger = false)
 	{
-		$resultcreate = $this->createCommon($user, $notrigger);
-		if ($resultcreate > 0 && !empty($this->fk_ticket)){
-			$this->add_object_linked('ticket',$this->fk_ticket);
+
+//		$sql_request = ' SELECT ref FROM llx_clienjoyholidays_clienjoyholidays';
+//		$resql = $db->query($sql_request);
+//		$num = $db->num_rows($resql);
+//		$row = $db->fetch_row($resql);
+		$res = $this->fetchAll();
+		foreach ($res as $key => $val){
+			var_dump($val);
 		}
+
+
+
+		$resultcreate = $this->createCommon($user, $notrigger);
 
 		//$resultvalidate = $this->validate($user, $notrigger);
 
@@ -204,9 +211,9 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 * Clone an object into another one
 	 *
-	 * @param  	User 	$user      	User that creates
-	 * @param  	int 	$fromid     Id of object to clone
-	 * @return 	mixed 				New object created, <0 if KO
+	 * @param User $user User that creates
+	 * @param int $fromid Id of object to clone
+	 * @return    mixed                New object created, <0 if KO
 	 */
 	public function createFromClone(User $user, $fromid)
 	{
@@ -239,7 +246,7 @@ class CliEnjoyHolidays extends CommonObject
 
 		// Clear fields
 		if (property_exists($object, 'ref')) {
-			$object->ref = empty($this->fields['ref']['default']) ? "Copy_Of_".$object->ref : $this->fields['ref']['default'];
+			$object->ref = empty($this->fields['ref']['default']) ? "Copy_Of_" . $object->ref : $this->fields['ref']['default'];
 		}
 		if (property_exists($object, 'status')) {
 			$object->status = self::STATUS_DRAFT;
@@ -322,8 +329,8 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 * Load object in memory from the database
 	 *
-	 * @param int    $id   Id object
-	 * @param string $ref  Ref
+	 * @param int $id Id object
+	 * @param string $ref Ref
 	 * @return int         <0 if KO, 0 if not found, >0 if OK
 	 */
 	public function fetch($id, $ref = null)
@@ -351,13 +358,13 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 * Function to concat keys of fields
 	 *
-	 * @param   string   $alias   	String of alias of table for fields. For example 't'.
-	 * @return  string				list of alias fields
+	 * @param string $alias String of alias of table for fields. For example 't'.
+	 * @return  string                list of alias fields
 	 */
 	public function getFieldListRetrocompatibility($alias = '')
 	{
 		// retrocompatibility
-		if(intval(DOL_VERSION) <= 14){
+		if (intval(DOL_VERSION) <= 14) {
 			$keys = array_keys($this->fields);
 			if (!empty($alias)) {
 				$keys_with_alias = array();
@@ -377,12 +384,12 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 * Load list of objects in memory from the database.
 	 *
-	 * @param  string      $sortorder    Sort Order
-	 * @param  string      $sortfield    Sort field
-	 * @param  int         $limit        limit
-	 * @param  int         $offset       Offset
-	 * @param  array       $filter       Filter array. Example array('field'=>'valueforlike', 'customurl'=>...)
-	 * @param  string      $filtermode   Filter mode (AND or OR)
+	 * @param string $sortorder Sort Order
+	 * @param string $sortfield Sort field
+	 * @param int $limit limit
+	 * @param int $offset Offset
+	 * @param array $filter Filter array. Example array('field'=>'valueforlike', 'customurl'=>...)
+	 * @param string $filtermode Filter mode (AND or OR)
 	 * @return array|int                 int <0 if KO, array of pages if OK
 	 */
 	public function fetchAll($sortorder = '', $sortfield = '', $limit = 0, $offset = 0, array $filter = array(), $filtermode = 'AND')
@@ -395,9 +402,9 @@ class CliEnjoyHolidays extends CommonObject
 
 		$sql = 'SELECT ';
 		$sql .= $this->getFieldList('t');
-		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as t';
+		$sql .= ' FROM ' . MAIN_DB_PREFIX . $this->table_element . ' as t';
 		if (isset($this->ismultientitymanaged) && $this->ismultientitymanaged == 1) {
-			$sql .= ' WHERE t.entity IN ('.getEntity($this->table_element).')';
+			$sql .= ' WHERE t.entity IN (' . getEntity($this->table_element) . ')';
 		} else {
 			$sql .= ' WHERE 1 = 1';
 		}
@@ -406,27 +413,27 @@ class CliEnjoyHolidays extends CommonObject
 		if (count($filter) > 0) {
 			foreach ($filter as $key => $value) {
 				if ($key == 't.rowid') {
-					$sqlwhere[] = $key.'='.$value;
+					$sqlwhere[] = $key . '=' . $value;
 				} elseif (in_array($this->fields[$key]['type'], array('date', 'datetime', 'timestamp'))) {
-					$sqlwhere[] = $key.' = \''.$this->db->idate($value).'\'';
+					$sqlwhere[] = $key . ' = \'' . $this->db->idate($value) . '\'';
 				} elseif ($key == 'customsql') {
 					$sqlwhere[] = $value;
 				} elseif (strpos($value, '%') === false) {
-					$sqlwhere[] = $key.' IN ('.$this->db->sanitize($this->db->escape($value)).')';
+					$sqlwhere[] = $key . ' IN (' . $this->db->sanitize($this->db->escape($value)) . ')';
 				} else {
-					$sqlwhere[] = $key.' LIKE \'%'.$this->db->escape($value).'%\'';
+					$sqlwhere[] = $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
 				}
 			}
 		}
 		if (count($sqlwhere) > 0) {
-			$sql .= ' AND ('.implode(' '.$filtermode.' ', $sqlwhere).')';
+			$sql .= ' AND (' . implode(' ' . $filtermode . ' ', $sqlwhere) . ')';
 		}
 
 		if (!empty($sortfield)) {
 			$sql .= $this->db->order($sortfield, $sortorder);
 		}
 		if (!empty($limit)) {
-			$sql .= ' '.$this->db->plimit($limit, $offset);
+			$sql .= ' ' . $this->db->plimit($limit, $offset);
 		}
 
 		$resql = $this->db->query($sql);
@@ -447,8 +454,8 @@ class CliEnjoyHolidays extends CommonObject
 
 			return $records;
 		} else {
-			$this->errors[] = 'Error '.$this->db->lasterror();
-			dol_syslog(__METHOD__.' '.join(',', $this->errors), LOG_ERR);
+			$this->errors[] = 'Error ' . $this->db->lasterror();
+			dol_syslog(__METHOD__ . ' ' . join(',', $this->errors), LOG_ERR);
 
 			return -1;
 		}
@@ -457,17 +464,17 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 * Update object into database
 	 *
-	 * @param  User $user      User that modifies
-	 * @param  bool $notrigger false=launch triggers after, true=disable triggers
+	 * @param User $user User that modifies
+	 * @param bool $notrigger false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, >0 if OK
 	 */
 	public function update(User $user, $notrigger = false)
 	{
 
 		// Set status to validated ref,label,fk_destination_country is not null
-		if ($this->ref != null && $this->label != null && $this->fk_destination_country != null && $this->status == $this::STATUS_DRAFT) {
-			$this->status = $this::STATUS_VALIDATED;
-		}
+//		if ($this->ref != null && $this->label != null && $this->fk_destination_country != null && $this->status == $this::STATUS_DRAFT) {
+//			$this->status = $this::STATUS_VALIDATED;
+//		}
 
 		return $this->updateCommon($user, $notrigger);
 	}
@@ -475,8 +482,8 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 * Delete object in database
 	 *
-	 * @param User $user       User that deletes
-	 * @param bool $notrigger  false=launch triggers after, true=disable triggers
+	 * @param User $user User that deletes
+	 * @param bool $notrigger false=launch triggers after, true=disable triggers
 	 * @return int             <0 if KO, >0 if OK
 	 */
 	public function delete(User $user, $notrigger = false)
@@ -494,10 +501,10 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 *  Delete a line of object in database
 	 *
-	 *	@param  User	$user       User that delete
-	 *  @param	int		$idline		Id of line to delete
-	 *  @param 	bool 	$notrigger  false=launch triggers after, true=disable triggers
-	 *  @return int         		>0 if OK, <0 if KO
+	 * @param User $user User that delete
+	 * @param int $idline Id of line to delete
+	 * @param bool $notrigger false=launch triggers after, true=disable triggers
+	 * @return int                >0 if OK, <0 if KO
 	 */
 	public function deleteLine(User $user, $idline, $notrigger = false)
 	{
@@ -511,28 +518,28 @@ class CliEnjoyHolidays extends CommonObject
 
 
 	/**
-	 *	Validate object
+	 *    Validate object
 	 *
-	 *	@param		User	$user     		User making status change
-	 *  @param		int		$notrigger		1=Does not execute triggers, 0= execute triggers
-	 *	@return  	int						<=0 if OK, 0=Nothing done, >0 if KO
+	 * @param User $user User making status change
+	 * @param int $notrigger 1=Does not execute triggers, 0= execute triggers
+	 * @return    int                        <=0 if OK, 0=Nothing done, >0 if KO
 	 */
 	public function validate($user, $notrigger = 0)
 	{
 		global $conf, $langs;
 
-		require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+		require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
 
 		$error = 0;
 
 		// Protection
 		if ($this->status == self::STATUS_VALIDATED) {
-			dol_syslog(get_class($this)."::validate action abandonned: already validated", LOG_WARNING);
+			dol_syslog(get_class($this) . "::validate action abandonned: already validated", LOG_WARNING);
 			return 0;
 		}
 
 		if ($this->status == self::STATUS_DRAFT) {
-			return 0;
+			$this->status = self::STATUS_VALIDATED;
 		}
 
 		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->clienjoyholidays->clienjoyholidays->write))
@@ -557,21 +564,21 @@ class CliEnjoyHolidays extends CommonObject
 
 		if (!empty($num)) {
 			// Validate
-			$sql = "UPDATE ".MAIN_DB_PREFIX.$this->table_element;
-			$sql .= " SET ref = '".$this->db->escape($num)."',";
-			$sql .= " status = ".self::STATUS_VALIDATED;
+			$sql = "UPDATE " . MAIN_DB_PREFIX . $this->table_element;
+			$sql .= " SET ref = '" . $this->db->escape($num) . "',";
+			$sql .= " status = " . self::STATUS_VALIDATED;
 			if (!empty($this->fields['fk_destination_country'])) {
-				$sql .= ", fk_destination_country = ".((integer) $this->fk_destination_country);
+				$sql .= ", fk_destination_country = " . ((integer)$this->fk_destination_country);
 			}
 			if (!empty($this->fields['label'])) {
-				$sql .= ", label = ".((integer) $this->label);
+				$sql .= ", label = " . ((integer)$this->label);
 			}
 			if (!empty($this->fields['fk_user_valid'])) {
-				$sql .= ", fk_user_valid = ".((int) $user->id);
+				$sql .= ", fk_user_valid = " . ((int)$user->id);
 			}
-			$sql .= " WHERE rowid = ".((int) $this->id);
+			$sql .= " WHERE rowid = " . ((int)$this->id);
 
-			dol_syslog(get_class($this)."::validate()", LOG_DEBUG);
+			dol_syslog(get_class($this) . "::validate()", LOG_DEBUG);
 			$resql = $this->db->query($sql);
 			if (!$resql) {
 				dol_print_error($this->db);
@@ -587,30 +594,31 @@ class CliEnjoyHolidays extends CommonObject
 			// Rename directory if dir was a temporary ref
 			if (preg_match('/^[\(]?PROV/i', $this->ref)) {
 				// Now we rename also files into index
-				$sql = 'UPDATE '.MAIN_DB_PREFIX."ecm_files set filename = CONCAT('".$this->db->escape($this->newref)."', SUBSTR(filename, ".(strlen($this->ref) + 1).")), filepath = 'clienjoyholidays/".$this->db->escape($this->newref)."'";
-				$sql .= " WHERE filename LIKE '".$this->db->escape($this->ref)."%' AND filepath = 'clienjoyholidays/".$this->db->escape($this->ref)."' and entity = ".$conf->entity;
+				$sql = 'UPDATE ' . MAIN_DB_PREFIX . "ecm_files set filename = CONCAT('" . $this->db->escape($this->newref) . "', SUBSTR(filename, " . (strlen($this->ref) + 1) . ")), filepath = 'clienjoyholidays/" . $this->db->escape($this->newref) . "'";
+				$sql .= " WHERE filename LIKE '" . $this->db->escape($this->ref) . "%' AND filepath = 'clienjoyholidays/" . $this->db->escape($this->ref) . "' and entity = " . $conf->entity;
 				$resql = $this->db->query($sql);
 				if (!$resql) {
-					$error++; $this->error = $this->db->lasterror();
+					$error++;
+					$this->error = $this->db->lasterror();
 				}
 
 				// We rename directory ($this->ref = old ref, $num = new ref) in order not to lose the attachments
 				$oldref = dol_sanitizeFileName($this->ref);
 				$newref = dol_sanitizeFileName($num);
-				$dirsource = $conf->clienjoyholidays->dir_output.'/clienjoyholidays/'.$oldref;
-				$dirdest = $conf->clienjoyholidays->dir_output.'/clienjoyholidays/'.$newref;
+				$dirsource = $conf->clienjoyholidays->dir_output . '/clienjoyholidays/' . $oldref;
+				$dirdest = $conf->clienjoyholidays->dir_output . '/clienjoyholidays/' . $newref;
 				if (!$error && file_exists($dirsource)) {
-					dol_syslog(get_class($this)."::validate() rename dir ".$dirsource." into ".$dirdest);
+					dol_syslog(get_class($this) . "::validate() rename dir " . $dirsource . " into " . $dirdest);
 
 					if (@rename($dirsource, $dirdest)) {
 						dol_syslog("Rename ok");
 						// Rename docs starting with $oldref with $newref
-						$listoffiles = dol_dir_list($conf->clienjoyholidays->dir_output.'/clienjoyholidays/'.$newref, 'files', 1, '^'.preg_quote($oldref, '/'));
+						$listoffiles = dol_dir_list($conf->clienjoyholidays->dir_output . '/clienjoyholidays/' . $newref, 'files', 1, '^' . preg_quote($oldref, '/'));
 						foreach ($listoffiles as $fileentry) {
 							$dirsource = $fileentry['name'];
-							$dirdest = preg_replace('/^'.preg_quote($oldref, '/').'/', $newref, $dirsource);
-							$dirsource = $fileentry['path'].'/'.$dirsource;
-							$dirdest = $fileentry['path'].'/'.$dirdest;
+							$dirdest = preg_replace('/^' . preg_quote($oldref, '/') . '/', $newref, $dirsource);
+							$dirsource = $fileentry['path'] . '/' . $dirsource;
+							$dirdest = $fileentry['path'] . '/' . $dirdest;
 							@rename($dirsource, $dirdest);
 						}
 					}
@@ -635,11 +643,11 @@ class CliEnjoyHolidays extends CommonObject
 
 
 	/**
-	 *	Set draft status
+	 *    Set draft status
 	 *
-	 *	@param	User	$user			Object user that modify
-	 *  @param	int		$notrigger		1=Does not execute triggers, 0=Execute triggers
-	 *	@return	int						<0 if KO, >0 if OK
+	 * @param User $user Object user that modify
+	 * @param int $notrigger 1=Does not execute triggers, 0=Execute triggers
+	 * @return    int                        <0 if KO, >0 if OK
 	 */
 	public function setDraft($user, $notrigger = 0)
 	{
@@ -659,20 +667,20 @@ class CliEnjoyHolidays extends CommonObject
 	}
 
 	/**
-	 *	Set cancel status
+	 *    Set cancel status
 	 *
-	 *	@param	User	$user			Object user that modify
-	 *  @param	int		$notrigger		1=Does not execute triggers, 0=Execute triggers
-	 *	@return	int						<0 if KO, 0=Nothing done, >0 if OK
+	 * @param User $user Object user that modify
+	 * @param int $notrigger 1=Does not execute triggers, 0=Execute triggers
+	 * @return    int                        <0 if KO, 0=Nothing done, >0 if OK
 	 */
 
 
 	/**
-	 *	Set back to validated status
+	 *    Set back to validated status
 	 *
-	 *	@param	User	$user			Object user that modify
-	 *  @param	int		$notrigger		1=Does not execute triggers, 0=Execute triggers
-	 *	@return	int						<0 if KO, 0=Nothing done, >0 if OK
+	 * @param User $user Object user that modify
+	 * @param int $notrigger 1=Does not execute triggers, 0=Execute triggers
+	 * @return    int                        <0 if KO, 0=Nothing done, >0 if OK
 	 */
 	public function reopen($user, $notrigger = 0)
 	{
@@ -694,12 +702,12 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 *  Return a link to the object card (with optionaly the picto)
 	 *
-	 *  @param  int     $withpicto                  Include picto in link (0=No picto, 1=Include picto into link, 2=Only picto)
-	 *  @param  string  $option                     On what the link point to ('nolink', ...)
-	 *  @param  int     $notooltip                  1=Disable tooltip
-	 *  @param  string  $morecss                    Add more css on link
-	 *  @param  int     $save_lastsearch_value      -1=Auto, 0=No save of lastsearch_values when clicking, 1=Save lastsearch_values whenclicking
-	 *  @return	string                              String with URL
+	 * @param int $withpicto Include picto in link (0=No picto, 1=Include picto into link, 2=Only picto)
+	 * @param string $option On what the link point to ('nolink', ...)
+	 * @param int $notooltip 1=Disable tooltip
+	 * @param string $morecss Add more css on link
+	 * @param int $save_lastsearch_value -1=Auto, 0=No save of lastsearch_values when clicking, 1=Save lastsearch_values whenclicking
+	 * @return    string                              String with URL
 	 */
 	public function getNomUrl($withpicto = 0, $option = '', $notooltip = 0, $morecss = '', $save_lastsearch_value = -1)
 	{
@@ -709,7 +717,7 @@ class CliEnjoyHolidays extends CommonObject
 //			$result = 'Brouillon';
 //			return $result;
 		} else {
-			if (! empty($conf->dol_no_mouse_hover)) {
+			if (!empty($conf->dol_no_mouse_hover)) {
 				$notooltip = 1; // Force disable tooltips
 			}
 
@@ -722,12 +730,12 @@ class CliEnjoyHolidays extends CommonObject
 			$label .= '<br>';
 			$label .= '<b>' . $langs->trans('abc') . ':</b> ' . $this->ref;
 
-			if (! empty($this->commercial_text)) {
+			if (!empty($this->commercial_text)) {
 				$label .= '<br>';
 				$label .= '<b>' . $langs->trans($this->fields['commercial_text']['label']) . ':</b> ' . str_replace("\r\n", "", $this->commercial_text);
 			}
 
-			if (! empty($this->keywords)) {
+			if (!empty($this->keywords)) {
 //				$label .= '<br>';
 //				$label .= '<b>' . $langs->trans($this->fields['keywords']['label']) . ':</b> ' . str_replace("\r\n", "", $this->keywords);
 			}
@@ -784,7 +792,7 @@ class CliEnjoyHolidays extends CommonObject
 					$upload_dir = $conf->$module->multidir_output[$conf->entity] . "/$class/" . dol_sanitizeFileName($this->ref);
 					$filearray = dol_dir_list($upload_dir, "files");
 					$filename = $filearray[0]['name'];
-					if (! empty($filename)) {
+					if (!empty($filename)) {
 						$pospoint = strpos($filearray[0]['name'], '.');
 
 						$pathtophoto = $class . '/' . $this->ref . '/thumbs/' . substr($filename, 0, $pospoint) . '_mini' . substr($filename, $pospoint);
@@ -825,8 +833,8 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 *  Return the label of the status
 	 *
-	 *  @param  int		$mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
-	 *  @return	string 			       Label of status
+	 * @param int $mode 0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
+	 * @return    string                   Label of status
 	 */
 	public function getLibStatut($mode = 0)
 	{
@@ -834,12 +842,13 @@ class CliEnjoyHolidays extends CommonObject
 	}
 
 	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
+
 	/**
 	 *  Return the status
 	 *
-	 *  @param	int		$status        Id status
-	 *  @param  int		$mode          0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
-	 *  @return string 			       Label of status
+	 * @param int $status Id status
+	 * @param int $mode 0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
+	 * @return string                   Label of status
 	 */
 	public function LibStatut($status, $mode = 0)
 	{
@@ -853,17 +862,17 @@ class CliEnjoyHolidays extends CommonObject
 			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('CEHValidated');
 		}
 
-		$statusType = 'status'.$status;
+		$statusType = 'status' . $status;
 		if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
 
 		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
 	}
 
 	/**
-	 *	Load the info information in the object
+	 *    Load the info information in the object
 	 *
-	 *	@param  int		$id       Id of object
-	 *	@return	void
+	 * @param int $id Id of object
+	 * @return    void
 	 */
 
 
@@ -871,8 +880,8 @@ class CliEnjoyHolidays extends CommonObject
 	{
 		$sql = 'SELECT rowid, date_creation as datec, tms as datem,';
 		$sql .= ' fk_user_creat, fk_user_modif';
-		$sql .= ' FROM '.MAIN_DB_PREFIX.$this->table_element.' as t';
-		$sql .= ' WHERE t.rowid = '.((int) $id);
+		$sql .= ' FROM ' . MAIN_DB_PREFIX . $this->table_element . ' as t';
+		$sql .= ' WHERE t.rowid = ' . ((int)$id);
 		$result = $this->db->query($sql);
 		if ($result) {
 			if ($this->db->num_rows($result)) {
@@ -896,9 +905,9 @@ class CliEnjoyHolidays extends CommonObject
 					$this->user_cloture = $cluser;
 				}
 
-				$this->date_creation     = $this->db->jdate($obj->datec);
+				$this->date_creation = $this->db->jdate($obj->datec);
 				$this->date_modification = $this->db->jdate($obj->datem);
-				$this->date_validation   = $this->db->jdate($obj->datev);
+				$this->date_validation = $this->db->jdate($obj->datev);
 			}
 
 			$this->db->free($result);
@@ -923,16 +932,16 @@ class CliEnjoyHolidays extends CommonObject
 	}
 
 	/**
-	 * 	Create an array of lines
+	 *    Create an array of lines
 	 *
-	 * 	@return array|int		array of lines if OK, <0 if KO
+	 * @return array|int        array of lines if OK, <0 if KO
 	 */
 	public function getLinesArray()
 	{
 		$this->lines = array();
 
 		$objectline = new CliEnjoyHolidaysLine($this->db);
-		$result = $objectline->fetchAll('ASC', 'position', 0, 0, array('customsql'=>'fk_clienjoyholidays = '.$this->id));
+		$result = $objectline->fetchAll('ASC', 'position', 0, 0, array('customsql' => 'fk_clienjoyholidays = ' . $this->id));
 		var_dump($result);
 		if (is_numeric($result)) {
 			$this->error = $this->error;
@@ -947,7 +956,7 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 *  Returns the reference to the following non used object depending on the active numbering module.
 	 *
-	 *  @return string      		Object free reference
+	 * @return string            Object free reference
 	 */
 	public function getNextNumRef()
 	{
@@ -965,16 +974,16 @@ class CliEnjoyHolidays extends CommonObject
 			$classname = $conf->global->CLIENJOYHOLIDAYS_CLIENJOYHOLIDAYS_ADDON;
 
 			// Include file with class
-			$dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
+			$dirmodels = array_merge(array('/'), (array)$conf->modules_parts['models']);
 			foreach ($dirmodels as $reldir) {
-				$dir = dol_buildpath($reldir."core/modules/clienjoyholidays/");
+				$dir = dol_buildpath($reldir . "core/modules/clienjoyholidays/");
 
 				// Load file with numbering class (if found)
-				$mybool |= @include_once $dir.$file;
+				$mybool |= @include_once $dir . $file;
 			}
 
 			if ($mybool === false) {
-				dol_print_error('', "Failed to include file ".$file);
+				dol_print_error('', "Failed to include file " . $file);
 				return '';
 			}
 
@@ -990,7 +999,7 @@ class CliEnjoyHolidays extends CommonObject
 					return "";
 				}
 			} else {
-				print $langs->trans("Error")." ".$langs->trans("ClassNotFound").' '.$classname;
+				print $langs->trans("Error") . " " . $langs->trans("ClassNotFound") . ' ' . $classname;
 				return "";
 			}
 		} else {
@@ -1002,13 +1011,13 @@ class CliEnjoyHolidays extends CommonObject
 	/**
 	 *  Create a document onto disk according to template module.
 	 *
-	 *  @param	    string		$modele			Force template to use ('' to not force)
-	 *  @param		Translate	$outputlangs	objet lang a utiliser pour traduction
-	 *  @param      int			$hidedetails    Hide details of lines
-	 *  @param      int			$hidedesc       Hide description
-	 *  @param      int			$hideref        Hide ref
-	 *  @param      null|array  $moreparams     Array to provide more information
-	 *  @return     int         				0 if KO, 1 if OK
+	 * @param string $modele Force template to use ('' to not force)
+	 * @param Translate $outputlangs objet lang a utiliser pour traduction
+	 * @param int $hidedetails Hide details of lines
+	 * @param int $hidedesc Hide description
+	 * @param int $hideref Hide ref
+	 * @param null|array $moreparams Array to provide more information
+	 * @return     int                        0 if KO, 1 if OK
 	 */
 	public function generateDocument($modele, $outputlangs, $hidedetails = 0, $hidedesc = 0, $hideref = 0, $moreparams = null)
 	{
@@ -1043,24 +1052,22 @@ class CliEnjoyHolidays extends CommonObject
 	 * Return HTML string to put an input field into a page
 	 * Code very similar with showInputField of extra fields
 	 *
-	 * @param  array   		$val	       Array of properties for field to show
-	 * @param  string  		$key           Key of attribute
-	 * @param  string  		$value         Preselected value to show (for date type it must be in timestamp format, for amount or price it must be a php numeric value)
-	 * @param  string  		$moreparam     To add more parameters on html input tag
-	 * @param  string  		$keysuffix     Prefix string to add into name and id of field (can be used to avoid duplicate names)
-	 * @param  string  		$keyprefix     Suffix string to add into name and id of field (can be used to avoid duplicate names)
-	 * @param  string|int	$morecss       Value for css to define style/length of field. May also be a numeric.
+	 * @param array $val Array of properties for field to show
+	 * @param string $key Key of attribute
+	 * @param string $value Preselected value to show (for date type it must be in timestamp format, for amount or price it must be a php numeric value)
+	 * @param string $moreparam To add more parameters on html input tag
+	 * @param string $keysuffix Prefix string to add into name and id of field (can be used to avoid duplicate names)
+	 * @param string $keyprefix Suffix string to add into name and id of field (can be used to avoid duplicate names)
+	 * @param string|int $morecss Value for css to define style/length of field. May also be a numeric.
 	 * @return string
 	 */
 	public function showInputField($val, $key, $value, $moreparam = '', $keysuffix = '', $keyprefix = '', $morecss = 0, $nonewbutton = 0)
 	{
 		global $conf, $langs, $form, $action;
 
-		if($key == 'keywords') {
+		if ($key == 'keywords') {
 			// return '<input  name="keywords" style="text-transform: uppercase" type="text" value="'.dol_escape_htmltag($value).'"/>';
-		}
-		else
-		{
+		} else {
 			$out = parent::showInputField($val, $key, $value, $moreparam, $keysuffix, $keyprefix, $morecss, $nonewbutton);
 		}
 
@@ -1070,7 +1077,7 @@ class CliEnjoyHolidays extends CommonObject
 }
 
 
-require_once DOL_DOCUMENT_ROOT.'/core/class/commonobjectline.class.php';
+require_once DOL_DOCUMENT_ROOT . '/core/class/commonobjectline.class.php';
 
 /**
  * Class CliEnjoyHolidaysLine. You can also remove this and generate a CRUD class for lines objects.

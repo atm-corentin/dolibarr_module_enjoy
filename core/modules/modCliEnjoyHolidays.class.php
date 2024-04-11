@@ -320,12 +320,12 @@ class modClienjoyHolidays extends DolibarrModules
 			'mainmenu'=>'clienjoyholidaysmain',
 			'leftmenu'=>'clienjoyholidays',
 			'url'=>'/clienjoyholidays/clienjoyholidays_list.php',
-			'langs'=>'chiffrage@chiffrage',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'=>'clienjoyholidays@clienjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
 			'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->chiffrage->enabled' if entry must be visible if module is enabled.
 			'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read',			                // Use 'perms'=>'$user->rights->chiffrage->level1->level2' if you want your menu with a permission rules
 			'target'=>'',
-			'prefix' => '<span class="fas fa-comment-dollar em092 pictofixedwidth chiffrage-left-menu-picto" style="color: #7e7772;"></span>',
+			'prefix' => '<span class="fas fa-comment-dollar em092 pictofixedwidth clienjoyholidays-left-menu-picto" style="color: #7e7772;"></span>',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
 
