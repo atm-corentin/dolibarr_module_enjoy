@@ -232,10 +232,6 @@ if (empty($reshook)) {
 		$object->add_object_linked('ticket',$fk_ticket);
 	}
 
-	if($action == 'confirm_create_task'){
-		$object->add_object_linked('project_task',$fk_task);
-	}
-
 	// Actions when linking object each other
 	include DOL_DOCUMENT_ROOT . '/core/actions_dellink.inc.php';
 
@@ -259,7 +255,7 @@ if ($redirectBackToPage == true && $textCommercial == ! null) {
  */
 $form = new Form($db);
 $formfile = new FormFile($db);
-$formproject = new FormProjets($db);
+
 
 
 $title = $langs->trans("CliEnjoyHolidays");
@@ -389,16 +385,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		include DOL_DOCUMENT_ROOT . '/core/actions_addupdatedelete.inc.php';
 		$form = new Form($db);
 		$refProjectCliEnjoyHolidays = new Project($db);
-		$resProject = $refProjectCliEnjoyHolidays->fetch($object->fk_project);
-		$formquestion = array(
-			array(
-				'type' => 'other',
-				'name' => 'fk_projet',
-				'label' => $langs->trans("CEHSelectProject"),
-				'value' => $form->selectForForms('Project:projet/class/project.class.php:1:(t.fk_statut:!=:' . Project::STATUS_CLOSED . ')', 'fk_projet',$object->fk_project, 1, '', '', "form-project")
-			)
-		);
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('CEHTaskCreate'), $langs->trans('ConfirmCreateObject'), 'confirm_create_task', $formquestion, 0, 1);
+
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('CEHTaskCreate'), $langs->trans('ConfirmCreateObject'), 'confirm_create_task', 0, 1);
 	}
 
 	// Confirmation to delete
@@ -407,7 +395,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 	// Confirmation to delete line
 	if ($action == 'deleteline') {
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id . '&lineid=' . $lineid, $langs->trans('DeleteLine'), $langs->trans('ConfirmDeleteLine'), 'confirm_deleteline', '', 0, 1);
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id , $langs->trans('DeleteLine'), $langs->trans('ConfirmDeleteLine'), 'confirm_deleteline', '', 0, 1);
 	}
 	// Clone confirmation
 	if ($action == 'clone') {

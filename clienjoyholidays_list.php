@@ -226,9 +226,7 @@ if (empty($reshook)) {
 	if ($action == "confirm-add-clienjoyholidays" && $user->hasRight('clienjoyholidays', 'creer')) {
 		$target_fk_propal = GETPOST('target_fk_propal', 'int');
 		$error = 0;
-		if (empty($target_fk_propal)) {
-			setEventMessage('CEHErrorSelectAtLeastPropal', 'errors');
-		} elseif (empty($toselect) || !is_array($toselect)) {
+		if (empty($toselect) || !is_array($toselect)) {
 			setEventMessage('CEHErrorMinSelect', 'errors');
 		} else {
 			//TODO Apply to propal
@@ -493,8 +491,6 @@ $param .= $hookmanager->resPrint;
 $arrayofmassactions = array(
 	//TODO Mass action from clienjoyholidays to propal lines
 	'validate' => img_picto('', 'check', 'class="pictofixedwidth"') . ' ' . $langs->trans("CEHValidate"),
-	'preaddpropal' => img_picto('', 'filenew', 'class="pictofixedwidth"') . ' ' . $langs->trans("CEHAddToPropal"),
-	'preaddtasktoproject' => img_picto('', 'filenew', 'class="pictofixedwidth"') . ' ' . $langs->trans("CEHAddTasksToProject"),
 	//'generate_doc'=>img_picto('', 'pdf', 'class="pictofixedwidth"').$langs->trans("ReGeneratePDF"),
 	//'builddoc'=>img_picto('', 'pdf', 'class="pictofixedwidth"').$langs->trans("PDFMerge"),
 	//'presend'=>img_picto('', 'email', 'class="pictofixedwidth"').$langs->trans("SendByMail"),

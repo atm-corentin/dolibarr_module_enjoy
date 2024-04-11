@@ -677,7 +677,7 @@ class CliEnjoyHolidays extends CommonObject
 	public function reopen($user, $notrigger = 0)
 	{
 		// Protection
-		if ($this->status != self::STATUS_CANCELED) {
+		if ($this->status != self::STATUS_DRAFT) {
 			return 0;
 		}
 
@@ -1058,24 +1058,6 @@ class CliEnjoyHolidays extends CommonObject
 
 		if($key == 'keywords') {
 			// return '<input  name="keywords" style="text-transform: uppercase" type="text" value="'.dol_escape_htmltag($value).'"/>';
-		}
-		if($key == 'group_title'){
-			$out = '<input type="text" class="flat '.$morecss.' maxwidthonsmartphone" list="datalist_'.$keyprefix.$key.$keysuffix.'" name="'.$keyprefix.$key.$keysuffix.'" id="'.$keyprefix.$key.$keysuffix.'" value="'.dol_escape_htmltag($value).'" '.($moreparam ? $moreparam : '').'>';
-
-
-
-			$sql = 'SELECT DISTINCT group_title FROM '.MAIN_DB_PREFIX.$this->table_element ;
-			$sql.= ' WHERE fk_project IN(0, '.intval($this->fk_project).')';
-			$sql.= ' AND CHAR_LENGTH(group_title) > 0';
-			$listobj = $this->db->getRows($sql);
-
-			$out.='<datalist id="datalist_'.$keyprefix.$key.$keysuffix.'" >';
-			if(!empty($listobj)){
-				foreach ($listobj as $obj){
-					$out.='<option value="'.dol_escape_htmltag($obj->group_title).'">';
-				}
-			}
-			$out.='</datalist>';
 		}
 		else
 		{
