@@ -26,4 +26,12 @@ ModuleCliEnjoyHolidaysDesc = CliEnjoyHolidays description
 #
 # Lang page
 #
-CEH_description = The clienjoyholidays module allows you to create, modify, delete, clone and list travel packages
+CEH_description = The clienjoyholidays module allows you to create, modify, delete, clone, list travel packages
+CEHValidated = Validated
+CEHCreateToClone = Cloned
+CEHTaskCreate = Create a task
+CEHDeleteCliEnjoyHolidays = Deleting clienjoyholidays
+CEHErrorMinSelect = Select a minimum element.
+CEHSuccessAddCliEnjoyHolidaysLines = %s task(s) added.
+CEHSettings = Settings
+CEHAbout = About

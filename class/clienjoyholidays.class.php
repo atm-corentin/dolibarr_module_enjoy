@@ -99,12 +99,12 @@ class CliEnjoyHolidays extends CommonObject
 	 */
 	public $fields = [
 		'ref' => array('type' => 'varchar(40)', 'label' => 'Ref', 'enabled' => '1', 'position' => 1, 'notnull' => 1, 'visible' => 1, 'index' => 1, 'searchall' => 1, 'showoncombobox' => '1', 'comment' => "Reference of object"),
-		'label' => array('type' => 'varchar(160)', 'label' => 'libelle', 'enabled' => '1', 'position' => 2, 'notnull' => 1, 'visible' => 1),
+		'label' => array('type' => 'varchar(160)', 'label' => 'Libelle', 'enabled' => '1', 'position' => 2, 'notnull' => 1, 'visible' => 1),
 		'amount' => array('type' => 'price', 'label' => 'Price', 'enabled' => '1', 'notnull' => 0, 'position' => 3, 'visible' => 1),
 		'fk_destination_country' => array('type' => 'integer:Ccountry:/core/class/ccountry.class.php', 'label' => 'Pays de destination', 'enabled' => '1', 'notnull' => 1, 'position' => 4, 'visible' => 1, 'foreignkey' => 'c_country.rowid'),
 		'start_date' => array('type' => 'datetime', 'label' => 'Départ', 'enabled' => '1', 'notnull' => 0, 'position' => 5, 'visible' => 1),
 		'return_date' => array('type' => 'datetime', 'label' => 'Arrivée', 'enabled' => '1', 'notnull' => 0, 'position' => 6, 'visible' => 1),
-		'fk_travel_mod' => array('type' => 'sellist:c_transport_mode:label:rowid::(active:=:1)', 'label' => 'Mode de transport', 'enabled' => '1', 'notnull' => 0, 'position' => 7, 'visible' => 1, 'foreignkey' => 'c_transport_mode.rowid'),
+		'fk_travel_mod' => array('type' => 'sellist:c_transport_mod:label:rowid::(active:=:1)', 'label' => 'Mode de transport', 'enabled' => '1', 'notnull' => 0, 'position' => 7, 'visible' => 1, 'foreignkey' => 'c_transport_mode.rowid'),
 
 		'rowid' => array('type' => 'integer', 'label' => 'TechnicalID', 'enabled' => '1', 'position' => 1, 'notnull' => 1, 'visible' => 0, 'noteditable' => '1', 'index' => 10, 'css' => 'left', 'comment' => "Id"),
 		'fk_user_creat' => array('type' => 'integer:User:user/class/user.class.php', 'label' => 'UserAuthor', 'enabled' => '1', 'position' => 20, 'notnull' => 1, 'visible' => -2, 'foreignkey' => 'user.rowid',),
@@ -304,7 +304,8 @@ class CliEnjoyHolidays extends CommonObject
 
 		// End
 		if (!$error) {
-			setEventMessage("CEHCreateToClone");
+
+			setEventMessage($langs->trans('CEHCreateToClone'));
 			$this->db->commit();
 			return $object;
 		} else {
@@ -541,29 +542,13 @@ class CliEnjoyHolidays extends CommonObject
 
 		$this->db->begin();
 
-		// Define new ref
-		if (!$error && (preg_match('/^[\(]?PROV/i', $this->ref) || empty($this->ref))) { // empty should not happened, but when it occurs, the test save life
-			$num = $this->getNextNumRef();
-		} else {
-			$num = $this->ref;
-		}
-		$this->newref = $num;
 
-		if (!empty($num)) {
+
+
 			// Validate
 			$sql = "UPDATE " . MAIN_DB_PREFIX . $this->table_element;
-			$sql .= " SET ref = '" . $this->db->escape($num) . "',";
-			$sql .= " status = " . self::STATUS_VALIDATED;
-			if (!empty($this->fields['fk_destination_country'])) {
-				$sql .= ", fk_destination_country = " . ((integer)$this->fk_destination_country);
-			}
-			if (!empty($this->fields['label'])) {
-				$sql .= ", label = " . ((integer)$this->label);
-			}
-			if (!empty($this->fields['fk_user_valid'])) {
-				$sql .= ", fk_user_valid = " . ((int)$user->id);
-			}
-			$sql .= " WHERE rowid = " . ((int)$this->id);
+			$sql .= " SET status = " . self::STATUS_VALIDATED;
+			$sql .= " WHERE ref = '" . $this->ref . "'";
 
 			dol_syslog(get_class($this) . "::validate()", LOG_DEBUG);
 			$resql = $this->db->query($sql);
@@ -573,49 +558,11 @@ class CliEnjoyHolidays extends CommonObject
 				$error++;
 			}
 
-		}
 
-		if (!$error) {
-			$this->oldref = $this->ref;
 
-			// Rename directory if dir was a temporary ref
-			if (preg_match('/^[\(]?PROV/i', $this->ref)) {
-				// Now we rename also files into index
-				$sql = 'UPDATE ' . MAIN_DB_PREFIX . "ecm_files set filename = CONCAT('" . $this->db->escape($this->newref) . "', SUBSTR(filename, " . (strlen($this->ref) + 1) . ")), filepath = 'clienjoyholidays/" . $this->db->escape($this->newref) . "'";
-				$sql .= " WHERE filename LIKE '" . $this->db->escape($this->ref) . "%' AND filepath = 'clienjoyholidays/" . $this->db->escape($this->ref) . "' and entity = " . $conf->entity;
-				$resql = $this->db->query($sql);
-				if (!$resql) {
-					$error++;
-					$this->error = $this->db->lasterror();
-				}
-
-				// We rename directory ($this->ref = old ref, $num = new ref) in order not to lose the attachments
-				$oldref = dol_sanitizeFileName($this->ref);
-				$newref = dol_sanitizeFileName($num);
-				$dirsource = $conf->clienjoyholidays->dir_output . '/clienjoyholidays/' . $oldref;
-				$dirdest = $conf->clienjoyholidays->dir_output . '/clienjoyholidays/' . $newref;
-				if (!$error && file_exists($dirsource)) {
-					dol_syslog(get_class($this) . "::validate() rename dir " . $dirsource . " into " . $dirdest);
-
-					if (@rename($dirsource, $dirdest)) {
-						dol_syslog("Rename ok");
-						// Rename docs starting with $oldref with $newref
-						$listoffiles = dol_dir_list($conf->clienjoyholidays->dir_output . '/clienjoyholidays/' . $newref, 'files', 1, '^' . preg_quote($oldref, '/'));
-						foreach ($listoffiles as $fileentry) {
-							$dirsource = $fileentry['name'];
-							$dirdest = preg_replace('/^' . preg_quote($oldref, '/') . '/', $newref, $dirsource);
-							$dirsource = $fileentry['path'] . '/' . $dirsource;
-							$dirdest = $fileentry['path'] . '/' . $dirdest;
-							@rename($dirsource, $dirdest);
-						}
-					}
-				}
-			}
-		}
 
 		// Set new ref and current status
 		if (!$error) {
-			$this->ref = $num;
 			$this->status = self::STATUS_VALIDATED;
 		}
 

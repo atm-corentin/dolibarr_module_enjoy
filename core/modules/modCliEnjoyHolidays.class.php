@@ -19,11 +19,11 @@
  */
 
 /**
- * 	\defgroup   enjoyholidays     Module EnjoyHolidays
+ * 	\defgroup   clienjoyholidays     Module EnjoyHolidays
  *  \brief      EnjoyHolidays module descriptor.
  *
- *  \file       htdocs/enjoyholidays/core/modules/modCliEnjoyHolidays.class.php
- *  \ingroup    enjoyholidays
+ *  \file       htdocs/clienjoyholidays/core/modules/modCliEnjoyHolidays.class.php
+ *  \ingroup    clienjoyholidays
  *  \brief      Description and activation file for module EnjoyHolidays
  */
 include_once DOL_DOCUMENT_ROOT.'/core/modules/DolibarrModules.class.php';
@@ -59,7 +59,7 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Gives the possibility for the module, to provide his own family info and position of this family (Overwrite $this->family and $this->module_position. Avoid this)
 		//$this->familyinfo = array('myownfamily' => array('position' => '01', 'label' => $langs->trans("MyOwnFamily")));
-		// Module label (no space allowed), used if translation string 'ModuleclienjoyholidaysName' not found (enjoyholidays is name of module).
+		// Module label (no space allowed), used if translation string 'ModuleclienjoyholidaysName' not found (clienjoyholidays is name of module).
 		$this->name = preg_replace('/^mod/i', '', get_class($this));
 
 		// Module description, used if translation string 'ModuleenjoyholidaysDesc' not found (Enjoyholidays is name of module).
@@ -79,7 +79,7 @@ class modClienjoyHolidays extends DolibarrModules
 		/*require_once __DIR__ . '/../../class/techatm.class.php';
 		$this->url_last_version = \clienjoyholidays\TechATM::getLastModuleVersionUrl($this);*/
 
-		// Key used in llx_const table to save module status enabled/disabled (where enjoyholidays is value of property name of module in uppercase)
+		// Key used in llx_const table to save module status enabled/disabled (where clienjoyholidays is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 
 		// Name of image file used for this module.
@@ -110,11 +110,11 @@ class modClienjoyHolidays extends DolibarrModules
 			'theme' => 0,
 			// Set this to relative path of css file if module has its own css file
 			'css' => array(
-				//    '/enjoyholidays/css/enjoyholidays.css.php',
+				//    '/clienjoyholidays/css/clienjoyholidays.css.php',
 			),
 			// Set this to relative path of js file if module must load a js on all pages
 			'js' => array(
-				//   '/enjoyholidays/js/enjoyholidays.js.php',
+				//   '/clienjoyholidays/js/clienjoyholidays.js.php',
 			),
 			// Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
 			'hooks' => array(
@@ -124,10 +124,10 @@ class modClienjoyHolidays extends DolibarrModules
 		);
 
 		// Data directories to create when module is enabled.
-		// Example: this->dirs = array("/enjoyholidays/temp","/enjoyholidays/subdir");
+		// Example: this->dirs = array("/clienjoyholidays/temp","/clienjoyholidays/subdir");
 		$this->dirs = array("/clienjoyholidays/temp");
 
-		// Config pages. Put here list of php page, stored into enjoyholidays/admin directory, to use to setup module.
+		// Config pages. Put here list of php page, stored into clienjoyholidays/admin directory, to use to setup module.
 		//$this->config_page_url = array("setup.php@clienjoyholidays");
 
 		// Dependencies
@@ -159,8 +159,8 @@ class modClienjoyHolidays extends DolibarrModules
 		$this->const = array();
 
 		// Example:
-		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@enjoyholidays:$user->rights->enjoyholidays->read:/enjoyholidays/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
-		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@enjoyholidays:$user->rights->othermodule->read:/enjoyholidays/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
+		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@clienjoyholidays:$user->rights->clienjoyholidays->read:/clienjoyholidays/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
+		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@clienjoyholidays:$user->rights->othermodule->read:/clienjoyholidays/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
 		// $this->tabs[] = array('data'=>'objecttype:-tabname:NU:conditiontoremove');                                                     										// To remove an existing tab identified by code tabname
 		//
 		// Where objecttype can be
@@ -185,30 +185,21 @@ class modClienjoyHolidays extends DolibarrModules
 		// 'user'             to add a tab in user view
 
 		// Dictionaries
-		$this->dictionaries = array();
-		/* Example:
+
 		$this->dictionaries=array(
-			'langs'=>'enjoyholidays@enjoyholidays',
-			// List of tables we want to see into dictonnary editor
-			'tabname'=>array(MAIN_DB_PREFIX."table1", MAIN_DB_PREFIX."table2", MAIN_DB_PREFIX."table3"),
-			// Label of tables
-			'tablib'=>array("Table1", "Table2", "Table3"),
-			// Request to select fields
-			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table1 as f', 'SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table2 as f', 'SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table3 as f'),
-			// Sort order
-			'tabsqlsort'=>array("label ASC", "label ASC", "label ASC"),
-			// List of fields (result of select to show dictionary)
-			'tabfield'=>array("code,label", "code,label", "code,label"),
-			// List of fields (list of fields to edit a record)
-			'tabfieldvalue'=>array("code,label", "code,label", "code,label"),
-			// List of fields (list of fields for insert)
-			'tabfieldinsert'=>array("code,label", "code,label", "code,label"),
-			// Name of columns with primary key (try to always name it 'rowid')
-			'tabrowid'=>array("rowid", "rowid", "rowid"),
-			// Condition to show each dictionary
-			'tabcond'=>array($conf->enjoyholidays->enabled, $conf->clienjoyholidays->enabled, $conf->clienjoyholidays->enabled)
+			'langs'=>'clienjoyholidays@clienjoyhoidays',
+			'tabname'=>array("c_transport_mod"),// List of tables we want to see into dictonnary editor
+			'tablib'=>array("Mode de transports"),// Label of tables
+			'tabsql'=>array('SELECT rowid,entity,code, label, active FROM '.MAIN_DB_PREFIX.'c_transport_mod'),// Request to select fields
+			'tabsqlsort'=>array("code ASC"),// Sort order
+			'tabfield'=>array("code,label"),// List of fields (result of select to show dictionary)
+			'tabfieldvalue'=>array("code,label"), // List of fields (list of fields to edit a record)
+			'tabfieldinsert'=>array("code,label"),// List of fields (list of fields for insert)
+			'tabrowid'=>array("rowid"),	// Name of columns with primary key (try to always name it 'rowid')
+			'tabcond'=>array($conf->clienjoyholidays->enabled),	// Condition to show each dictionary
+			'tabhelp' => array(array())
 		);
-		*/
+
 
 		// Boxes/Widgets
 		// Add here list of php file(s) stored in clienjoyholidays/core/boxes that contains a class to show a widget.
@@ -259,11 +250,11 @@ class modClienjoyHolidays extends DolibarrModules
 			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
 			'mainmenu'=>'clienjoyholidaysmain',
 			'leftmenu'=>'clienjoyholidays',
-			'url'=>'/clienjoyholidays/clienjoyholidaysindex.php',
+			'url'=>'/clienjoyholidays/clienjoyholidays_list.php',
 			'langs'=>'clienjoyholidays@clienjoyholidays', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000 + $r,
-			'enabled'=>'$conf->clienjoyholidays->enabled', // Define condition to show or hide menu entry. Use '$conf->enjoyholidays->enabled' if entry must be visible if module is enabled.
-			'perms'=>'1', // Use 'perms'=>'$user->rights->enjoyholidays->enjoyholidays->read' if you want your menu with a permission rules
+			'enabled'=>'$conf->clienjoyholidays->enabled', // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled.
+			'perms'=>'1', // Use 'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2, // 0=Menu for internal users, 1=external users, 2=both
 		);
@@ -336,7 +327,7 @@ class modClienjoyHolidays extends DolibarrModules
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=clienjoyholidaysmain,fk_leftmenu=clienjoyholidays_clienjoyholidays_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',			                // This is a Left menu entry
-			'titre'=>'Verifie',
+			'titre'=>'Valide',
 			'mainmenu'=>'clienjoyholidaysmain',
 			'leftmenu'=>'clienjoyholidays_clienjoyholidays_list_verified',
 			'url'=>'/clienjoyholidays/clienjoyholidays_list.php?leftmenu=clienjoyholidays&search_status=1',
