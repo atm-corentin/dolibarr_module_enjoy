@@ -373,13 +373,6 @@ if (empty($reshook)) {
 
 		$formconfirm = '';
 
-		// Action Création d'une tâche depuis un clienjoyholidays
-		if ($action == 'create_task_from_clienjoyholidays') {
-			include DOL_DOCUMENT_ROOT . '/core/actions_addupdatedelete.inc.php';
-			$form = new Form($db);
-			$refCliEnjoyHolidays = new Project($db);
-			$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('CEHTaskCreate'), $langs->trans('ConfirmCreateObject'), 'confirm_create_task', 0, 1);
-		}
 
 		// Confirmation to delete
 		if ($action == 'delete') {

@@ -1,5 +1,2 @@
 CEH_description = Le module clienjoyholidays permet de céer, modifier, supprimer, cloner, lister des formules de voyages
-CEHTaskCreate = Création d'une tâche
-CEHDeleteCliEnjoyHolidays = Suppression de clienjoyholidays
-CEHErrorMinSelect = Sélectionner un élément minimum.
-CEHSuccessAddCliEnjoyHolidaysLines = %s tâche(s) ajoutée(s).
+

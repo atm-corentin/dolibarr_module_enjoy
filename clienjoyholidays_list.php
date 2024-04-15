@@ -224,14 +224,8 @@ if (empty($reshook)) {
 
 
 	if ($action == "confirm-add-clienjoyholidays" && $user->hasRight('clienjoyholidays', 'creer')) {
-		$target_fk_propal = GETPOST('target_fk_propal', 'int');
 		$error = 0;
-		if (empty($toselect) || !is_array($toselect)) {
-			setEventMessage('CEHErrorMinSelect', 'errors');
-		} else {
-			//TODO Apply to propal
 			$numberLineCreate = $numberLineError = 0;
-			include_once DOL_DOCUMENT_ROOT . '/comm/propal/class/propal.class.php';
 			$clienjoyholidays = new CliEnjoyHolidays($db);
 			$res = $clienjoyholidays->fetch();
 		}

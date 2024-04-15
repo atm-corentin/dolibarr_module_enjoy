@@ -62,7 +62,7 @@ class modClienjoyHolidays extends DolibarrModules
 		// Module label (no space allowed), used if translation string 'ModuleclienjoyholidaysName' not found (clienjoyholidays is name of module).
 		$this->name = preg_replace('/^mod/i', '', get_class($this));
 
-		// Module description, used if translation string 'ModuleenjoyholidaysDesc' not found (Enjoyholidays is name of module).
+		// Module description, used if translation string 'ModuleclienjoyholidaysDesc' not found (CliEnjoyholidays is name of module).
 		$this->description = "CEH_description";
 		// Used only if file README.md and README-LL.md not found.
 		$this->descriptionlong = "CEH_description";
