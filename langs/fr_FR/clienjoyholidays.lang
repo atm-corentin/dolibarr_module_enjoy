@@ -1,3 +1,2 @@
-CEH = Le module clienjoyholidays permet d'accéder a ses informations par la suite
-CEHValidated = Validé
-DRAFT = L'objet clienjoyholidays a un status brouillon
+CEH_description = Le module clienjoyholidays permet de céer, modifier, supprimer, cloner, lister des formules de voyages
+

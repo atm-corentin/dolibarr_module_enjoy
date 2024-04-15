@@ -1,9 +1,21 @@
-# Default ignored files
-/shelf/
-/.idea/workspace.xml
-/php.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
+# Generated binaries
+/build/*.zip
+/bin/*.zip
+# Doxygen generated documentation
+/build/doxygen/doxygen_warnings.log
+/doc/code/doxygen
+# Composer managed dependencies
+/vendor
+/dev/bin
+# PHPdocumentor generated files
+/build/phpdoc
+/doc/code/phpdoc
+# Sphinx generated files
+/doc/user/build
+/.settings/
+/.buildpath
+/.project
+# Other
+*.back
+/.editorconfig
+/.gitattributes

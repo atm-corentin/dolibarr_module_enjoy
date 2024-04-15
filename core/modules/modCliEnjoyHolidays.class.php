@@ -45,7 +45,7 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Id for module (must be unique).
 		// Use here a free id (See in Home -> System information -> Dolibarr for list of used modules id).
-		$this->numero = 104995; // TODO Go on page https://wiki.dolibarr.org/index.php/List_of_modules_id to reserve an id number for your module
+		$this->numero = 104199; // TODO Go on page https://wiki.dolibarr.org/index.php/List_of_modules_id to reserve an id number for your module
 
 		// Key text used to identify module (for permissions, menus, etc...)
 		$this->rights_class = 'clienjoyholidays';
@@ -73,7 +73,7 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
 
-		$this->version = '1.9.0';
+		$this->version = '1.0.0';
 
 		// Url to the file with your last numberversion of this module
 		/*require_once __DIR__ . '/../../class/techatm.class.php';
@@ -128,7 +128,7 @@ class modClienjoyHolidays extends DolibarrModules
 		$this->dirs = array("/clienjoyholidays/temp");
 
 		// Config pages. Put here list of php page, stored into enjoyholidays/admin directory, to use to setup module.
-		$this->config_page_url = array("setup.php@clienjoyholidays");
+		//$this->config_page_url = array("setup.php@clienjoyholidays");
 
 		// Dependencies
 		// A condition to hide module
@@ -157,29 +157,7 @@ class modClienjoyHolidays extends DolibarrModules
 		//                             2 => array('ENJOYHOLIDAYS_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
 		$this->const = array();
-		/*$r = 0;
 
-		$this->const[$r][0] = "CLIENJOYHOLIDAYS_CLIENJOYHOLIDAYS_ADDON";
-		$this->const[$r][1] = "chaine";
-		$this->const[$r][2] = "mod_clienjoyholidays_standard";
-		$this->const[$r][3] = "";
-		$this->const[$r][4] = 0;*/
-
-		// Some keys to add into the overwriting translation tables
-		/*$this->overwrite_translation = array(
-			'en_US:ParentCompany'=>'Parent company or reseller',
-			'fr_FR:ParentCompany'=>'Maison mère ou revendeur'
-		)*/
-
-		/*if (!isset($conf->clienjoyholidays) || !isset($conf->clienjoyholidays->enabled)) {
-			$conf->clienjoyholidays = new stdClass();
-			$conf->clienjoyholidays->enabled = 0;
-		}
-
-		// Array to add new pages in new tabs
-		$this->tabs = array(
-			/*'thirdparty:+tabCliEnjoyHolidays:CliEnjoyHolidays:clienjoyholidays@clienjoyholidays:$user->rights->clienjoyholidays->clienjoyholidays->read:/clienjoyholidays/clienjoyholidays_list.php?socid=__ID__',*/
-		//);
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@enjoyholidays:$user->rights->enjoyholidays->read:/enjoyholidays/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
 		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@enjoyholidays:$user->rights->othermodule->read:/enjoyholidays/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
@@ -235,31 +213,11 @@ class modClienjoyHolidays extends DolibarrModules
 		// Boxes/Widgets
 		// Add here list of php file(s) stored in clienjoyholidays/core/boxes that contains a class to show a widget.
 		$this->boxes = array(
-			//  0 => array(
-			//      'file' => 'clienjoyholidayswidget1.php@clienjoyholidays',
-			//      'note' => 'Widget provided by CliEnjoyHolidays',
-			//      'enabledbydefaulton' => 'Home',
-			//  ),
-			//  ...
 		);
 
 		// Cronjobs (List of cron jobs entries to add when module is enabled)
 		// unit_frequency must be 60 for minute, 3600 for hour, 86400 for day, 604800 for week
 		$this->cronjobs = array(
-			//  0 => array(
-			//      'label' => 'MyJob label',
-			//      'jobtype' => 'method',
-			//      'class' => '/clienjoyholidays/class/clienjoyholidays.class.php',
-			//      'objectname' => 'CliEnjoyHolidays',
-			//      'method' => 'doScheduledJob',
-			//      'parameters' => '',
-			//      'comment' => 'Comment',
-			//      'frequency' => 2,
-			//      'unitfrequency' => 3600,
-			//      'status' => 0,
-			//      'test' => '$conf->clienjoyholidays->enabled',
-			//      'priority' => 50,
-			//  ),
 		);
 		// Example: $this->cronjobs=array(
 		//    0=>array('label'=>'My label', 'jobtype'=>'method', 'class'=>'/dir/class/file.class.php', 'objectname'=>'MyClass', 'method'=>'myMethod', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>2, 'unitfrequency'=>3600, 'status'=>0, 'test'=>'$conf->clienjoyholidays->enabled', 'priority'=>50),
