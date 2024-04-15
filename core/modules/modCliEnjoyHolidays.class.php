@@ -73,7 +73,7 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
 
-		$this->version = '1.0.0';
+		$this->version = '1.0.1';
 
 		// Url to the file with your last numberversion of this module
 		/*require_once __DIR__ . '/../../class/techatm.class.php';
@@ -90,8 +90,6 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Define some features supported by module (triggers, login, substitutions, menus, css, etc...)
 		$this->module_parts = array(
-			// Set this to 1 if module has its own trigger directory (core/triggers)
-			'triggers' => 1,
 			// Set this to 1 if module has its own login method file (core/login)
 			'login' => 0,
 			// Set this to 1 if module has its own substitution function file (core/substitutions)
@@ -100,10 +98,6 @@ class modClienjoyHolidays extends DolibarrModules
 			'menus' => 0,
 			// Set this to 1 if module overwrite template dir (core/tpl)
 			'tpl' => 0,
-			// Set this to 1 if module has its own barcode directory (core/modules/barcode)
-			'barcode' => 0,
-			// Set this to 1 if module has its own models directory (core/modules/xxx)
-			'models' => 1,
 			// Set this to 1 if module has its own printing directory (core/modules/printing)
 			'printing' => 0,
 			// Set this to 1 if module has its own theme directory (theme)

@@ -791,9 +791,9 @@ class CliEnjoyHolidays extends CommonObject
 			global $langs;
 			//$langs->load("clienjoyholidays@clienjoyholidays");
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('Draft');
-			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('CEHValidated');
+			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('Validated');
 			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('Draft');
-			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('CEHValidated');
+			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('Validated');
 		}
 
 		$statusType = 'status' . $status;

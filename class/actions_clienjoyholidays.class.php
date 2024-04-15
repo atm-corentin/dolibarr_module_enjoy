@@ -112,17 +112,6 @@ class ActionsCliEnjoyHolidays extends CommonHookActions
 		$error = 0; // Error counter
 		$disabled = 1;
 
-		/* print_r($parameters); print_r($object); echo "action: " . $action; */
-		if (in_array($parameters['currentcontext'], array('somecontext1', 'somecontext2'))) {		// do something only for the context 'somecontext1' or 'somecontext2'
-			$this->resprints = '<option value="0"'.($disabled ? ' disabled="disabled"' : '').'>'.$langs->trans("CliEnjoyHolidaysMassAction").'</option>';
-		}
-
-		if (!$error) {
-			return 0; // or return 1 to replace standard code
-		} else {
-			$this->errors[] = 'Error message';
-			return -1;
-		}
 	}
 
 
@@ -148,33 +137,6 @@ class ActionsCliEnjoyHolidays extends CommonHookActions
 		if ($parameters['mode'] == 'remove') {
 			// utilisé si on veut faire disparaitre des onglets.
 			return 0;
-		} elseif ($parameters['mode'] == 'add') {
-			$langs->load('clienjoyholidays@clienjoyholidays');
-			// utilisé si on veut ajouter des onglets.
-			$counter = count($parameters['head']);
-			$element = $parameters['object']->element;
-			$id = $parameters['object']->id;
-			// verifier le type d'onglet comme member_stats où ça ne doit pas apparaitre
-			// if (in_array($element, ['societe', 'member', 'contrat', 'fichinter', 'project', 'propal', 'commande', 'facture', 'order_supplier', 'invoice_supplier'])) {
-			if (in_array($element, ['context1', 'context2'])) {
-				$datacount = 0;
-
-				$parameters['head'][$counter][0] = dol_buildpath('/clienjoyholidays/clienjoyholidays_tab.php', 1) . '?id=' . $id . '&amp;module='.$element;
-				$parameters['head'][$counter][1] = $langs->trans('CliEnjoyHolidaysTab');
-				if ($datacount > 0) {
-					$parameters['head'][$counter][1] .= '<span class="badge marginleftonlyshort">' . $datacount . '</span>';
-				}
-				$parameters['head'][$counter][2] = 'clienjoyholidaysemails';
-				$counter++;
-			}
-			if ($counter > 0 && (int) DOL_VERSION < 14) {
-				$this->results = $parameters['head'];
-				// return 1 to replace standard code
-				return 1;
-			} else {
-				// en V14 et + $parameters['head'] est modifiable par référence
-				return 0;
-			}
 		}
 	}
 
@@ -191,13 +153,6 @@ class ActionsCliEnjoyHolidays extends CommonHookActions
 	 */
 	public function addMoreActionsButtons(&$parameters, &$object, &$action, $hookmanager) {
 		global $langs;
-
-		$context = explode(':', $parameters['context']);
-		if (in_array('ticketcard', $context)) {
-			$descriptionTicketCliEnjoyHolidays = $langs->trans('CliEnjoyHolidaysAskTicketTitle', $object->ref);
-			$urlTicket = dol_buildpath('/ticket/card.php?id='.$object->id,1);
-			print '<a class="butAction" href="'.dol_buildpath('/clienjoyholidays/clienjoyholidays_card.php?action=create', 1). '&fk_soc='.$object->fk_soc.'&module_name='.$object->array_options['options_fk_webmodule'].'&commercial_text='.urlencode($descriptionTicketCliEnjoyHolidays).'&fk_ticket='.$object->id.'&backtopage='.urlencode($urlTicket).'">'.$langs->trans("NewCliEnjoyHolidays").'</a>';
-		}
 
 		return 0;
 	}
