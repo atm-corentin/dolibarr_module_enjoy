@@ -190,20 +190,7 @@ class CliEnjoyHolidays extends CommonObject
 	public function create(User $user, $notrigger = false)
 	{
 
-//		$sql_request = ' SELECT ref FROM llx_clienjoyholidays_clienjoyholidays';
-//		$resql = $db->query($sql_request);
-//		$num = $db->num_rows($resql);
-//		$row = $db->fetch_row($resql);
-		$res = $this->fetchAll();
-		foreach ($res as $key => $val){
-			var_dump($val);
-		}
-
-
-
 		$resultcreate = $this->createCommon($user, $notrigger);
-
-		//$resultvalidate = $this->validate($user, $notrigger);
 
 		return $resultcreate;
 	}
