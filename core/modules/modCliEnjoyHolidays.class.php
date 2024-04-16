@@ -151,7 +151,10 @@ class modClienjoyHolidays extends DolibarrModules
 		//                             2 => array('ENJOYHOLIDAYS_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
 		$this->const = array();
-
+		if (!isset($conf->clienjoyholidays) || !isset($conf->clienjoyholidays->enabled)) {
+			$conf->clienjoyholidays = new stdClass();
+			$conf->clienjoyholidays->enabled = 0;
+		}
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@clienjoyholidays:$user->rights->clienjoyholidays->read:/clienjoyholidays/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
 		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@clienjoyholidays:$user->rights->othermodule->read:/clienjoyholidays/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
@@ -181,7 +184,7 @@ class modClienjoyHolidays extends DolibarrModules
 		// Dictionaries
 
 		$this->dictionaries=array(
-			'langs'=>'clienjoyholidays@clienjoyhoidays',
+			'langs'=>'clienjoyholidays@clienjoyholidays',
 			'tabname'=>array("c_transport_mod"),// List of tables we want to see into dictonnary editor
 			'tablib'=>array("Mode de transports"),// Label of tables
 			'tabsql'=>array('SELECT rowid,entity,code, label, active FROM '.MAIN_DB_PREFIX.'c_transport_mod'),// Request to select fields
