@@ -19,11 +19,11 @@
  */
 
 /**
- * 	\defgroup   enjoyholidays     Module EnjoyHolidays
+ * 	\defgroup   clienjoyholidays     Module EnjoyHolidays
  *  \brief      EnjoyHolidays module descriptor.
  *
- *  \file       htdocs/enjoyholidays/core/modules/modCliEnjoyHolidays.class.php
- *  \ingroup    enjoyholidays
+ *  \file       htdocs/clienjoyholidays/core/modules/modCliEnjoyHolidays.class.php
+ *  \ingroup    clienjoyholidays
  *  \brief      Description and activation file for module EnjoyHolidays
  */
 include_once DOL_DOCUMENT_ROOT.'/core/modules/DolibarrModules.class.php';
@@ -59,10 +59,10 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Gives the possibility for the module, to provide his own family info and position of this family (Overwrite $this->family and $this->module_position. Avoid this)
 		//$this->familyinfo = array('myownfamily' => array('position' => '01', 'label' => $langs->trans("MyOwnFamily")));
-		// Module label (no space allowed), used if translation string 'ModuleclienjoyholidaysName' not found (enjoyholidays is name of module).
+		// Module label (no space allowed), used if translation string 'ModuleclienjoyholidaysName' not found (clienjoyholidays is name of module).
 		$this->name = preg_replace('/^mod/i', '', get_class($this));
 
-		// Module description, used if translation string 'ModuleenjoyholidaysDesc' not found (Enjoyholidays is name of module).
+		// Module description, used if translation string 'ModuleclienjoyholidaysDesc' not found (CliEnjoyholidays is name of module).
 		$this->description = "CEH_description";
 		// Used only if file README.md and README-LL.md not found.
 		$this->descriptionlong = "CEH_description";
@@ -73,13 +73,13 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
 
-		$this->version = '1.0.0';
+		$this->version = '1.0.1';
 
 		// Url to the file with your last numberversion of this module
 		/*require_once __DIR__ . '/../../class/techatm.class.php';
-		$this->url_last_version = \chiffrage\TechATM::getLastModuleVersionUrl($this);*/
+		$this->url_last_version = \clienjoyholidays\TechATM::getLastModuleVersionUrl($this);*/
 
-		// Key used in llx_const table to save module status enabled/disabled (where enjoyholidays is value of property name of module in uppercase)
+		// Key used in llx_const table to save module status enabled/disabled (where clienjoyholidays is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 
 		// Name of image file used for this module.
@@ -90,8 +90,6 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Define some features supported by module (triggers, login, substitutions, menus, css, etc...)
 		$this->module_parts = array(
-			// Set this to 1 if module has its own trigger directory (core/triggers)
-			'triggers' => 1,
 			// Set this to 1 if module has its own login method file (core/login)
 			'login' => 0,
 			// Set this to 1 if module has its own substitution function file (core/substitutions)
@@ -100,21 +98,17 @@ class modClienjoyHolidays extends DolibarrModules
 			'menus' => 0,
 			// Set this to 1 if module overwrite template dir (core/tpl)
 			'tpl' => 0,
-			// Set this to 1 if module has its own barcode directory (core/modules/barcode)
-			'barcode' => 0,
-			// Set this to 1 if module has its own models directory (core/modules/xxx)
-			'models' => 1,
 			// Set this to 1 if module has its own printing directory (core/modules/printing)
 			'printing' => 0,
 			// Set this to 1 if module has its own theme directory (theme)
 			'theme' => 0,
 			// Set this to relative path of css file if module has its own css file
 			'css' => array(
-				//    '/enjoyholidays/css/enjoyholidays.css.php',
+				//    '/clienjoyholidays/css/clienjoyholidays.css.php',
 			),
 			// Set this to relative path of js file if module must load a js on all pages
 			'js' => array(
-				//   '/enjoyholidays/js/enjoyholidays.js.php',
+				//   '/clienjoyholidays/js/clienjoyholidays.js.php',
 			),
 			// Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
 			'hooks' => array(
@@ -124,10 +118,10 @@ class modClienjoyHolidays extends DolibarrModules
 		);
 
 		// Data directories to create when module is enabled.
-		// Example: this->dirs = array("/enjoyholidays/temp","/enjoyholidays/subdir");
+		// Example: this->dirs = array("/clienjoyholidays/temp","/clienjoyholidays/subdir");
 		$this->dirs = array("/clienjoyholidays/temp");
 
-		// Config pages. Put here list of php page, stored into enjoyholidays/admin directory, to use to setup module.
+		// Config pages. Put here list of php page, stored into clienjoyholidays/admin directory, to use to setup module.
 		//$this->config_page_url = array("setup.php@clienjoyholidays");
 
 		// Dependencies
@@ -157,10 +151,13 @@ class modClienjoyHolidays extends DolibarrModules
 		//                             2 => array('ENJOYHOLIDAYS_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
 		$this->const = array();
-
+		if (!isset($conf->clienjoyholidays) || !isset($conf->clienjoyholidays->enabled)) {
+			$conf->clienjoyholidays = new stdClass();
+			$conf->clienjoyholidays->enabled = 0;
+		}
 		// Example:
-		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@enjoyholidays:$user->rights->enjoyholidays->read:/enjoyholidays/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
-		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@enjoyholidays:$user->rights->othermodule->read:/enjoyholidays/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
+		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@clienjoyholidays:$user->rights->clienjoyholidays->read:/clienjoyholidays/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
+		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@clienjoyholidays:$user->rights->othermodule->read:/clienjoyholidays/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
 		// $this->tabs[] = array('data'=>'objecttype:-tabname:NU:conditiontoremove');                                                     										// To remove an existing tab identified by code tabname
 		//
 		// Where objecttype can be
@@ -185,30 +182,21 @@ class modClienjoyHolidays extends DolibarrModules
 		// 'user'             to add a tab in user view
 
 		// Dictionaries
-		$this->dictionaries = array();
-		/* Example:
+
 		$this->dictionaries=array(
-			'langs'=>'enjoyholidays@enjoyholidays',
-			// List of tables we want to see into dictonnary editor
-			'tabname'=>array(MAIN_DB_PREFIX."table1", MAIN_DB_PREFIX."table2", MAIN_DB_PREFIX."table3"),
-			// Label of tables
-			'tablib'=>array("Table1", "Table2", "Table3"),
-			// Request to select fields
-			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table1 as f', 'SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table2 as f', 'SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table3 as f'),
-			// Sort order
-			'tabsqlsort'=>array("label ASC", "label ASC", "label ASC"),
-			// List of fields (result of select to show dictionary)
-			'tabfield'=>array("code,label", "code,label", "code,label"),
-			// List of fields (list of fields to edit a record)
-			'tabfieldvalue'=>array("code,label", "code,label", "code,label"),
-			// List of fields (list of fields for insert)
-			'tabfieldinsert'=>array("code,label", "code,label", "code,label"),
-			// Name of columns with primary key (try to always name it 'rowid')
-			'tabrowid'=>array("rowid", "rowid", "rowid"),
-			// Condition to show each dictionary
-			'tabcond'=>array($conf->enjoyholidays->enabled, $conf->clienjoyholidays->enabled, $conf->clienjoyholidays->enabled)
+			'langs'=>'clienjoyholidays@clienjoyholidays',
+			'tabname'=>array("c_transport_mod"),// List of tables we want to see into dictonnary editor
+			'tablib'=>array("Mode de transports"),// Label of tables
+			'tabsql'=>array('SELECT rowid,entity,code, label, active FROM '.MAIN_DB_PREFIX.'c_transport_mod'),// Request to select fields
+			'tabsqlsort'=>array("code ASC"),// Sort order
+			'tabfield'=>array("code,label"),// List of fields (result of select to show dictionary)
+			'tabfieldvalue'=>array("code,label"), // List of fields (list of fields to edit a record)
+			'tabfieldinsert'=>array("code,label"),// List of fields (list of fields for insert)
+			'tabrowid'=>array("rowid"),	// Name of columns with primary key (try to always name it 'rowid')
+			'tabcond'=>array($conf->clienjoyholidays->enabled),	// Condition to show each dictionary
+			'tabhelp' => array(array())
 		);
-		*/
+
 
 		// Boxes/Widgets
 		// Add here list of php file(s) stored in clienjoyholidays/core/boxes that contains a class to show a widget.
@@ -226,11 +214,184 @@ class modClienjoyHolidays extends DolibarrModules
 
 		// Permissions provided by this module
 		$this->rights = array();
-
+		$r = 0;
+		// Add here entries to declare new permissions
+		/* BEGIN MODULEBUILDER PERMISSIONS */
+		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
+		$this->rights[$r][1] = $langs->trans("ReadobjectsofCliEnjoyHolidays"); // Permission label
+		$this->rights[$r][4] = 'clienjoyholidays';
+		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->clienjoyholidays->clienjoyholidays->read)
+		$r++;
+		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
+		$this->rights[$r][1] = $langs->trans("CreateUpdateobjectsofCliEnjoyHolidays"); // Permission label
+		$this->rights[$r][4] = 'clienjoyholidays';
+		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->clienjoyholidays->clienjoyholidays->write)
+		$r++;
+		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
+		$this->rights[$r][1] = $langs->trans("DeleteobjectsofCliEnjoyHolidays"); // Permission label
+		$this->rights[$r][4] = 'clienjoyholidays';
+		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->clienjoyholidays->clienjoyholidays->delete)
+		//$r++;
+		/* END MODULEBUILDER PERMISSIONS */
 
 		// Main menu entries to add
 		$this->menu = array();
+		$r = 0;
+		// Add here entries to declare new menus
+		/* BEGIN MODULEBUILDER TOPMENU */
 
+		$this->menu[$r++] = array(
+			'fk_menu'=>'', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'top', // This is a Top menu entry
+			'titre'=>'ModuleEnjoyholidaysName',
+			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
+			'mainmenu'=>'clienjoyholidaysmain',
+			'leftmenu'=>'clienjoyholidays',
+			'url'=>'/clienjoyholidays/clienjoyholidays_list.php',
+			'langs'=>'clienjoyholidays@clienjoyholidays', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000 + $r,
+			'enabled'=>'$conf->clienjoyholidays->enabled', // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled.
+			'perms'=>'1', // Use 'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read' if you want your menu with a permission rules
+			'target'=>'',
+			'user'=>2, // 0=Menu for internal users, 1=external users, 2=both
+		);
+		/* END MODULEBUILDER TOPMENU */
+
+		// BEGIN MODULEBUILDER LEFTMENU CLIENJOYHOLIDAYS
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=clienjoyholidaysmain',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',                          // This is a Top menu entry
+			'titre'=>'Formule de voyage',
+			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
+			'mainmenu'=>'clienjoyholidaysmain',
+			'leftmenu'=>'clienjoyholidays',
+			'url'=>'/clienjoyholidays/clienjoyholidays_list.php',
+			'langs'=>'clienjoyholidays@clienjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000+$r,
+			'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->chiffrage->enabled' if entry must be visible if module is enabled.
+			'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read',			                // Use 'perms'=>'$user->rights->chiffrage->level1->level2' if you want your menu with a permission rules
+			'target'=>'',
+			'prefix' => '<span class="fas fa-comment-dollar em092 pictofixedwidth clienjoyholidays-left-menu-picto" style="color: #7e7772;"></span>',
+			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
+		);
+
+
+        $this->menu[$r++]=array(
+            'fk_menu'=>'fk_mainmenu=clienjoyholidaysmain,fk_leftmenu=clienjoyholidays',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+            'type'=>'left',			                // This is a Left menu entry
+            'titre'=>'New',
+            'mainmenu'=>'clienjoyholidaysmain',
+            'leftmenu'=>'clienjoyholidays_clienjoyholidays_new',
+            'url'=>'/clienjoyholidays/clienjoyholidays_card.php?action=create',
+            'langs'=>'clienjoyholidays@clienjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+            'position'=>1000+$r,
+            'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read',			                // Use 'perms'=>'$user->rights->clienjoyholidays->level1->level2' if you want your menu with a permission rules
+            'target'=>'',
+            'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
+        );
+
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=clienjoyholidaysmain,fk_leftmenu=clienjoyholidays',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',			                // This is a Left menu entry
+			'titre'=>'Liste',
+			'mainmenu'=>'clienjoyholidaysmain',
+			'leftmenu'=>'clienjoyholidays_clienjoyholidays_list',
+			'url'=>'/clienjoyholidays/clienjoyholidays_list.php',
+			'langs'=>'clienjoyholidays@clienjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000+$r,
+			'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read',			                // Use 'perms'=>'$user->rights->clienjoyholidays->level1->level2' if you want your menu with a permission rules
+			'target'=>'',
+			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
+		);
+
+
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=clienjoyholidaysmain,fk_leftmenu=clienjoyholidays_clienjoyholidays_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',			                // This is a Left menu entry
+			'titre'=>'Brouillon',
+			'mainmenu'=>'clienjoyholidaysmain',
+			'leftmenu'=>'clienjoyholidays_clienjoyholidays_list_draft',
+			'url'=>'/clienjoyholidays/clienjoyholidays_list.php?leftmenu=clienjoyholidays&search_status=0',
+			'langs'=>'clienjoyholidays@clienjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000+$r,
+			'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read',			                // Use 'perms'=>'$user->rights->clienjoyholidays->level1->level2' if you want your menu with a permission rules
+			'target'=>'',
+			'user'=>2,		                // 0=Menu for internal users, 1=external users, 2=both
+		);
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=clienjoyholidaysmain,fk_leftmenu=clienjoyholidays_clienjoyholidays_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',			                // This is a Left menu entry
+			'titre'=>'Valide',
+			'mainmenu'=>'clienjoyholidaysmain',
+			'leftmenu'=>'clienjoyholidays_clienjoyholidays_list_verified',
+			'url'=>'/clienjoyholidays/clienjoyholidays_list.php?leftmenu=clienjoyholidays&search_status=1',
+			'langs'=>'clienjoyholidays@clienjoyholidays',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000+$r,
+			'enabled'=>'$conf->clienjoyholidays->enabled',  // Define condition to show or hide menu entry. Use '$conf->clienjoyholidays->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'$user->rights->clienjoyholidays->clienjoyholidays->read',			                // Use 'perms'=>'$user->rights->clienjoyholidays->level1->level2' if you want your menu with a permission rules
+			'target'=>'',
+			'user'=>2,		                // 0=Menu for internal users, 1=external users, 2=both
+		);
+
+
+
+
+
+
+		/* END MODULEBUILDER LEFTMENU CLIENJOYHOLIDAYS */
+		// Exports profiles provided by this module
+		$r = 1;
+		/* BEGIN MODULEBUILDER EXPORT CLIENJOYHOLIDAYS */
+		/*
+		$langs->load("clienjoyholidays@clienjoyholidays");
+		$this->export_code[$r]=$this->rights_class.'_'.$r;
+		$this->export_label[$r]='CliEnjoyHolidaysLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
+		$this->export_icon[$r]='clienjoyholidays@clienjoyholidays';
+		// Define $this->export_fields_array, $this->export_TypeFields_array and $this->export_entities_array
+		$keyforclass = 'CliEnjoyHolidays'; $keyforclassfile='/clienjoyholidays/class/clienjoyholidays.class.php'; $keyforelement='clienjoyholidays@clienjoyholidays';
+		include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
+		//$this->export_fields_array[$r]['t.fieldtoadd']='FieldToAdd'; $this->export_TypeFields_array[$r]['t.fieldtoadd']='Text';
+		//unset($this->export_fields_array[$r]['t.fieldtoremove']);
+		//$keyforclass = 'CliEnjoyHolidaysLine'; $keyforclassfile='/clienjoyholidays/class/clienjoyholidays.class.php'; $keyforelement='clienjoyholidaysline@clienjoyholidays'; $keyforalias='tl';
+		//include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
+		$keyforselect='clienjoyholidays'; $keyforaliasextra='extra'; $keyforelement='clienjoyholidays@clienjoyholidays';
+		include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
+		//$keyforselect='clienjoyholidaysline'; $keyforaliasextra='extraline'; $keyforelement='clienjoyholidaysline@clienjoyholidays';
+		//include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
+		//$this->export_dependencies_array[$r] = array('clienjoyholidaysline'=>array('tl.rowid','tl.ref')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
+		//$this->export_special_array[$r] = array('t.field'=>'...');
+		//$this->export_examplevalues_array[$r] = array('t.field'=>'Example');
+		//$this->export_help_array[$r] = array('t.field'=>'FieldDescHelp');
+		$this->export_sql_start[$r]='SELECT DISTINCT ';
+		$this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'clienjoyholidays as t';
+		//$this->export_sql_end[$r]  =' LEFT JOIN '.MAIN_DB_PREFIX.'clienjoyholidays_line as tl ON tl.fk_clienjoyholidays = t.rowid';
+		$this->export_sql_end[$r] .=' WHERE 1 = 1';
+		$this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('clienjoyholidays').')';
+		$r++; */
+		/* END MODULEBUILDER EXPORT CLIENJOYHOLIDAYS */
+
+		// Imports profiles provided by this module
+		$r = 1;
+		/* BEGIN MODULEBUILDER IMPORT CLIENJOYHOLIDAYS */
+		/*
+		 $langs->load("clienjoyholidays@clienjoyholidays");
+		 $this->export_code[$r]=$this->rights_class.'_'.$r;
+		 $this->export_label[$r]='CliEnjoyHolidaysLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
+		 $this->export_icon[$r]='clienjoyholidays@clienjoyholidays';
+		 $keyforclass = 'CliEnjoyHolidays'; $keyforclassfile='/clienjoyholidays/class/clienjoyholidays.class.php'; $keyforelement='clienjoyholidays@clienjoyholidays';
+		 include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
+		 $keyforselect='clienjoyholidays'; $keyforaliasextra='extra'; $keyforelement='clienjoyholidays@clienjoyholidays';
+		 include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
+		 //$this->export_dependencies_array[$r]=array('mysubobject'=>'ts.rowid', 't.myfield'=>array('t.myfield2','t.myfield3')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
+		 $this->export_sql_start[$r]='SELECT DISTINCT ';
+		 $this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'clienjoyholidays as t';
+		 $this->export_sql_end[$r] .=' WHERE 1 = 1';
+		 $this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('clienjoyholidays').')';
+		 $r++; */
+		/* END MODULEBUILDER IMPORT CLIENJOYHOLIDAYS */
 	}
 
 	/**
